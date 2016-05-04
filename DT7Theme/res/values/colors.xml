@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="tab_text_normal">#000000</color>
+    <color name="tab_text_focuse">#008000</color>
+    <color name="tabline_bg">#008000</color>
+    <color name="tab_bg">#d3d3d3</color>
+    <color name="bottom_btn_normal">#ffffff</color>
+    <color name="bottom_btn_focuse">#000000</color>
+    <color name="bottom_btn_disable">#727272</color>
+
+</resources>

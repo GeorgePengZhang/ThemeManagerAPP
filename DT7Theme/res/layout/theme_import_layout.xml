@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/theme_bg"
+    android:orientation="vertical" >
+
+    <include layout="@layout/theme_top_detail_layout" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:id="@+id/id_ll_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical"
+            android:visibility="invisible" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/theme_empty_file" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="没有文件"
+                android:textColor="@color/tab_text_normal"
+                android:textSize="@dimen/tab_text_size" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/id_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <ListView
+                android:id="@+id/id_listview"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_weight="1" >
+            </ListView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center" >
+
+                <TextView
+                    android:id="@+id/id_sure"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/theme_import_btn"
+                    android:gravity="center"
+                    android:text="确定"
+                    android:textColor="@color/bottom_btn_focuse"
+                    android:textSize="@dimen/bottom_btn_size" />
+
+                <TextView
+                    android:id="@+id/id_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/theme_import_btn"
+                    android:gravity="center"
+                    android:text="取消"
+                    android:textColor="@color/bottom_btn_focuse"
+                    android:textSize="@dimen/bottom_btn_size" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>
