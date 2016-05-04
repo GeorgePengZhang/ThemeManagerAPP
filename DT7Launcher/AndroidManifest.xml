@@ -237,6 +237,19 @@
         <meta-data
             android:name="android.nfc.disable_beam_default"
             android:value="true" />
+        
+        <!-- micheal add gallery widget for disney theme on 20160504 begin  -->
+            <receiver android:name="com.auratech.launcher.widget.GalleryWidgetProvider" >
+            <intent-filter>
+                <action android:name="com.aura.theme.widgetGallery"/>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/gallery_widget_info" />
+        </receiver>
+        <!-- micheal add gallery widget for disney theme on 20160504 end  -->
     </application>
 
 </manifest>
