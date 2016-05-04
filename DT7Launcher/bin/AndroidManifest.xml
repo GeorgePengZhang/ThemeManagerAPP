@@ -17,10 +17,14 @@
 ** limitations under the License.
 */
 -->
-<manifest
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.auratech.launcher">
-    <uses-sdk android:targetSdkVersion="19" android:minSdkVersion="19"/>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.auratech.launcher"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="19"
+        android:targetSdkVersion="19" />
 
     <permission
         android:name="com.auratech.launcher.permission.PRELOAD_WORKSPACE"
@@ -28,33 +32,31 @@
         android:protectionLevel="signatureOrSystem" />
     <permission
         android:name="com.android.launcher.permission.INSTALL_SHORTCUT"
-        android:permissionGroup="android.permission-group.SYSTEM_TOOLS"
-        android:protectionLevel="dangerous"
+        android:description="@string/permdesc_install_shortcut"
         android:label="@string/permlab_install_shortcut"
-        android:description="@string/permdesc_install_shortcut" />
+        android:permissionGroup="android.permission-group.SYSTEM_TOOLS"
+        android:protectionLevel="dangerous" />
     <permission
         android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT"
-        android:permissionGroup="android.permission-group.SYSTEM_TOOLS"
-        android:protectionLevel="dangerous"
+        android:description="@string/permdesc_uninstall_shortcut"
         android:label="@string/permlab_uninstall_shortcut"
-        android:description="@string/permdesc_uninstall_shortcut"/>
+        android:permissionGroup="android.permission-group.SYSTEM_TOOLS"
+        android:protectionLevel="dangerous" />
     <permission
         android:name="com.auratech.launcher.permission.READ_SETTINGS"
-        android:permissionGroup="android.permission-group.SYSTEM_TOOLS"
-        android:protectionLevel="normal"
+        android:description="@string/permdesc_read_settings"
         android:label="@string/permlab_read_settings"
-        android:description="@string/permdesc_read_settings"/>
+        android:permissionGroup="android.permission-group.SYSTEM_TOOLS"
+        android:protectionLevel="normal" />
     <permission
         android:name="com.auratech.launcher.permission.WRITE_SETTINGS"
-        android:permissionGroup="android.permission-group.SYSTEM_TOOLS"
-        android:protectionLevel="signatureOrSystem"
+        android:description="@string/permdesc_write_settings"
         android:label="@string/permlab_write_settings"
-        android:description="@string/permdesc_write_settings"/>
-
+        android:permissionGroup="android.permission-group.SYSTEM_TOOLS"
+        android:protectionLevel="signatureOrSystem" />
     <permission
         android:name="com.auratech.launcher.permission.RECEIVE_LAUNCH_BROADCASTS"
-        android:protectionLevel="signature"
-        />
+        android:protectionLevel="signature" />
 
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.SET_WALLPAPER" />
@@ -68,68 +70,71 @@
     <uses-permission android:name="com.auratech.launcher.permission.READ_SETTINGS" />
     <uses-permission android:name="com.auratech.launcher.permission.WRITE_SETTINGS" />
     <uses-permission android:name="com.auratech.launcher.permission.RECEIVE_LAUNCH_BROADCASTS" />
-    <!-- micheal add for cp the db file  being-->
+    <!-- micheal add for cp the db file  being -->
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-     <!-- micheal add for cp the db file  end-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- micheal add for cp the db file  end -->
+
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
 
     <application
         android:name="com.auratech.launcher.LauncherApplication"
-        android:label="@string/application_name"
-        android:icon="@mipmap/ic_launcher_home"
         android:hardwareAccelerated="true"
+        android:icon="@mipmap/ic_launcher_home"
+        android:label="@string/application_name"
         android:largeHeap="@bool/config_largeHeap"
-        android:supportsRtl="true">
+        android:supportsRtl="true" >
         <activity
             android:name="com.auratech.launcher.Launcher"
-            android:launchMode="singleTask"
             android:clearTaskOnLaunch="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="nosensor"
             android:stateNotNeeded="true"
             android:theme="@style/Theme"
-            android:windowSoftInputMode="adjustPan"
-            android:screenOrientation="nosensor">
+            android:windowSoftInputMode="adjustPan" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.HOME" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.MONKEY"/>
+                <category android:name="android.intent.category.MONKEY" />
             </intent-filter>
         </activity>
-
         <activity
             android:name="com.auratech.launcher.ToggleWeightWatcher"
-            android:label="@string/toggle_weight_watcher"
             android:enabled="@bool/debug_memory_enabled"
-            android:icon="@mipmap/ic_launcher_home">
+            android:icon="@mipmap/ic_launcher_home"
+            android:label="@string/toggle_weight_watcher" >
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name="com.auratech.launcher.LauncherWallpaperPickerActivity"
-            android:theme="@style/Theme.WallpaperPicker"
-            android:label="@string/pick_wallpaper"
-            android:icon="@mipmap/ic_launcher_wallpaper"
             android:finishOnCloseSystemDialogs="true"
-            android:process=":wallpaper_chooser">
+            android:icon="@mipmap/ic_launcher_wallpaper"
+            android:label="@string/pick_wallpaper"
+            android:process=":wallpaper_chooser"
+            android:theme="@style/Theme.WallpaperPicker" >
             <intent-filter>
                 <action android:name="android.intent.action.SET_WALLPAPER" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name="com.auratech.launcher.WallpaperCropActivity"
-            android:theme="@style/Theme.WallpaperCropper"
-            android:label="@string/crop_wallpaper"
-            android:icon="@mipmap/ic_launcher_wallpaper"
             android:finishOnCloseSystemDialogs="true"
-            android:process=":wallpaper_chooser">
+            android:icon="@mipmap/ic_launcher_wallpaper"
+            android:label="@string/crop_wallpaper"
+            android:process=":wallpaper_chooser"
+            android:theme="@style/Theme.WallpaperCropper" >
             <intent-filter>
                 <action android:name="android.service.wallpaper.CROP_AND_SET_WALLPAPER" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
@@ -137,42 +142,53 @@
         <!-- Debugging tools -->
         <activity
             android:name="com.auratech.launcher.MemoryDumpActivity"
-            android:theme="@android:style/Theme.NoDisplay"
-            android:label="@string/debug_memory_activity"
             android:enabled="@bool/debug_memory_enabled"
             android:excludeFromRecents="true"
             android:icon="@mipmap/ic_launcher_home"
-            >
+            android:label="@string/debug_memory_activity"
+            android:theme="@android:style/Theme.NoDisplay" >
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.auratech.theme.ThemePreviewActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MyTheme" >
+        </activity>
+        <activity
+            android:name="com.auratech.theme.ThemeDetailActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MyTheme" >
+        </activity>
+        <activity
+            android:name="com.auratech.theme.ThemeImportActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MyTheme" >
+        </activity>
 
-        <service android:name="com.auratech.launcher.MemoryTracker"
-            android:enabled="@bool/debug_memory_enabled"
-            >
+        <service
+            android:name="com.auratech.launcher.MemoryTracker"
+            android:enabled="@bool/debug_memory_enabled" >
         </service>
 
         <!-- Intent received used to prepopulate the default workspace. -->
         <receiver
             android:name="com.auratech.launcher.PreloadReceiver"
-            android:permission="com.auratech.launcher.permission.PRELOAD_WORKSPACE">
+            android:permission="com.auratech.launcher.permission.PRELOAD_WORKSPACE" >
             <intent-filter>
                 <action android:name="com.auratech.launcher.action.PRELOAD_WORKSPACE" />
             </intent-filter>
         </receiver>
-
-        <receiver
-            android:name="com.auratech.launcher.WallpaperChangedReceiver">
+        <receiver android:name="com.auratech.launcher.WallpaperChangedReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.WALLPAPER_CHANGED" />
             </intent-filter>
         </receiver>
 
         <!-- Intent received used to install shortcuts from other applications -->
-        <receiver
-            android:name="com.auratech.launcher.InstallShortcutReceiver">
+        <receiver android:name="com.auratech.launcher.InstallShortcutReceiver" >
             <intent-filter>
                 <action android:name="com.android.launcher.action.INSTALL_SHORTCUT" />
             </intent-filter>
@@ -182,8 +198,7 @@
         </receiver>
 
         <!-- Intent received used to uninstall shortcuts from other applications -->
-        <receiver
-            android:name="com.auratech.launcher.UninstallShortcutReceiver">
+        <receiver android:name="com.auratech.launcher.UninstallShortcutReceiver" >
             <intent-filter>
                 <action android:name="com.android.launcher.action.UNINSTALL_SHORTCUT" />
             </intent-filter>
@@ -195,18 +210,19 @@
         <!-- New user initialization; set up initial wallpaper -->
         <receiver
             android:name="com.auratech.launcher.UserInitializeReceiver"
-            android:exported="false">
+            android:exported="false" >
             <intent-filter>
                 <action android:name="android.intent.action.USER_INITIALIZE" />
             </intent-filter>
         </receiver>
-
         <receiver android:name="com.auratech.launcher.PackageChangedReceiver" >
             <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_CHANGED"/>
-                <action android:name="android.intent.action.PACKAGE_REPLACED"/>
-                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
-                <data android:scheme="package"></data>
+                <action android:name="android.intent.action.PACKAGE_CHANGED" />
+                <action android:name="android.intent.action.PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
+                <data android:scheme="package" >
+                </data>
             </intent-filter>
         </receiver>
 
@@ -215,10 +231,12 @@
             android:name="com.auratech.launcher.LauncherProvider"
             android:authorities="com.auratech.launcher.settings"
             android:exported="true"
-            android:writePermission="com.auratech.launcher.permission.WRITE_SETTINGS"
-            android:readPermission="com.auratech.launcher.permission.READ_SETTINGS" />
+            android:readPermission="com.auratech.launcher.permission.READ_SETTINGS"
+            android:writePermission="com.auratech.launcher.permission.WRITE_SETTINGS" />
 
-        <meta-data android:name="android.nfc.disable_beam_default"
-                       android:value="true" />
+        <meta-data
+            android:name="android.nfc.disable_beam_default"
+            android:value="true" />
     </application>
+
 </manifest>

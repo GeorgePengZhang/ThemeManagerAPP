@@ -19,7 +19,6 @@ package com.auratech.launcher;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.Region;
@@ -31,8 +30,6 @@ import android.view.MotionEvent;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.TextView;
-
-import com.auratech.launcher.R;
 
 /**
  * TextView that draws a bubble behind the text. We cannot use a LineBackgroundSpan
@@ -113,11 +110,8 @@ public class BubbleTextView extends TextView {
         LauncherAppState app = LauncherAppState.getInstance();
         DeviceProfile grid = app.getDynamicGrid().getDeviceProfile();
         
-//        Bitmap drawable = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher_application);
         setCompoundDrawables(null,
                 Utilities.createIconDrawable(b), null, null);
-//        setCompoundDrawables(null,
-//                Utilities.createIconDrawable(drawable), null, null);
         setCompoundDrawablePadding(grid.iconDrawablePaddingPx);
         setText(info.title);
         setTag(info);

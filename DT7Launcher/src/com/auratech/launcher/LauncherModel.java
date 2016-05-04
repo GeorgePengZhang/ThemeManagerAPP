@@ -3159,6 +3159,7 @@ public class LauncherModel extends BroadcastReceiver {
         return info;
     }
 
+    //转化从数据库中读取的 icon数据保存为bitmap
     Bitmap getIconFromCursor(Cursor c, int iconIndex, Context context) {
         @SuppressWarnings("all") // suppress dead code warning
         final boolean debug = false;

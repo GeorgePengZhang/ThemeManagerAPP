@@ -1414,9 +1414,7 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
         	if (v != null) {
         		float scrollProgress = getScrollProgress(screenCenter, v, i);
         		
-//        		PageViewAnimation.setLayeredAnim(scrollProgress, i, getChildCount(), mDensity, v);
         		mPageViewAnimation.pageViewAnime(scrollProgress, i, getChildCount(), mDensity, v);
-//        		v.setBackgroundColor(Color.RED);
         	}
         }
         

@@ -1661,8 +1661,7 @@ public class Workspace extends SmoothPagedView
 
         updatePageAlphaValues(screenCenter);
         updateStateForCustomContent(screenCenter);
-        enableHwLayersOnVisiblePages();
-
+       
         boolean shouldOverScroll = (mOverScrollX < 0 && (!hasCustomContent() || isLayoutRtl())) ||
                 (mOverScrollX > mMaxScrollX && (!hasCustomContent() || !isLayoutRtl()));
 
@@ -1699,21 +1698,16 @@ public class Workspace extends SmoothPagedView
                 ((CellLayout) getChildAt(getChildCount() - 1)).resetOverscrollTransforms();
             }
             
-            
             for (int i = 0; i < getChildCount(); i++) {
                 View v = getPageAt(i);
                 if (v != null) {
                      float scrollProgress = getScrollProgress(screenCenter, v, i);
-//                     float rotation = - WORKSPACE_OVERSCROLL_ROTATION * scrollProgress;
-//                     v.setRotation(rotation);         
-//                     v.setCameraDistance(mDensity * mCameraDistance);
-//                     v.setPivotX(v.getMeasuredWidth() * 0.5f);
-//                     v.setPivotY(v.getMeasuredHeight());
                      mPageViewAnimation.pageViewAnime(scrollProgress, i, getChildCount(), mDensity, v);
-//                     v.setBackgroundColor(Color.RED);
                  }
             }
         }
+        
+        enableHwLayersOnVisiblePages();
     }
 
     @Override

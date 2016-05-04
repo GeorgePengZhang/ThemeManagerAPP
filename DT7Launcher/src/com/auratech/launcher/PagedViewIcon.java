@@ -16,13 +16,6 @@
 
 package com.auratech.launcher;
 
-import com.auratech.launcher.AppInfo;
-import com.auratech.launcher.BubbleTextView;
-import com.auratech.launcher.DeviceProfile;
-import com.auratech.launcher.LauncherAppState;
-import com.auratech.launcher.PagedViewIcon;
-import com.auratech.launcher.Utilities;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

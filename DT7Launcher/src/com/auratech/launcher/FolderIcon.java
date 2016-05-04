@@ -24,6 +24,7 @@ import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -42,9 +43,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.auratech.launcher.R;
 import com.auratech.launcher.DropTarget.DragObject;
 import com.auratech.launcher.FolderInfo.FolderListener;
+import com.auratech.theme.utils.PreferencesManager;
+import com.auratech.theme.utils.ThemeImageLoader.ThemeImageOptions;
+import com.auratech.theme.utils.ThemeResouceManager;
 
 /**
  * An icon that can appear on in the workspace representing an {@link UserFolder}.
@@ -58,7 +61,7 @@ public class FolderIcon extends FrameLayout implements FolderListener {
     private CheckLongPressHelper mLongPressHelper;
 
     // The number of icons to display in the
-    private static final int NUM_ITEMS_IN_PREVIEW = 3;
+    private static final int NUM_ITEMS_IN_PREVIEW = 9;
     private static final int CONSUMPTION_ANIMATION_DURATION = 100;
     private static final int DROP_IN_ANIMATION_DURATION = 400;
     private static final int INITIAL_ITEM_ANIMATION_DURATION = 350;
@@ -85,8 +88,10 @@ public class FolderIcon extends FrameLayout implements FolderListener {
 
     // Delay when drag enters until the folder opens, in miliseconds.
     private static final int ON_OPEN_DELAY = 800;
+	private static final String TAG = "FolderIcon";
 
     public static Drawable sSharedFolderLeaveBehind = null;
+	private static Bitmap mIconBgBitmap;
 
     private ImageView mPreviewBackground;
     private BubbleTextView mFolderName;
@@ -161,6 +166,16 @@ public class FolderIcon extends FrameLayout implements FolderListener {
         lp.width = grid.folderIconSizePx;
         lp.height = grid.folderIconSizePx;
 
+        if (mIconBgBitmap == null) {
+        	String theme = PreferencesManager.getInstance(launcher).getThemeKey();
+        	
+    		mIconBgBitmap = ThemeResouceManager.getInstance().getImageResourceFromARZ(theme, "icon_folder.png", ThemeResouceManager.THEME_TYPE_ICONS, new ThemeImageOptions(lp.width, lp.height));
+    	}
+        
+        if (mIconBgBitmap != null) {
+        	icon.mPreviewBackground.setImageBitmap(mIconBgBitmap);
+        }
+        
         icon.setTag(folderInfo);
         icon.setOnClickListener(launcher);
         icon.mInfo = folderInfo;
@@ -220,7 +235,7 @@ public class FolderIcon extends FrameLayout implements FolderListener {
                 sSharedInnerRingDrawable = res.getDrawable(R.drawable.portal_ring_inner_nolip_holo);
                 sSharedFolderLeaveBehind = res.getDrawable(R.drawable.portal_ring_rest);
                 sStaticValuesDirty = false;
-            }
+            } 
         }
 
         public void animateToAcceptState() {
@@ -478,13 +493,14 @@ public class FolderIcon extends FrameLayout implements FolderListener {
     }
 
     private void computePreviewDrawingParams(int drawableSize, int totalSize) {
-        if (mIntrinsicIconSize != drawableSize || mTotalWidth != totalSize) {
             LauncherAppState app = LauncherAppState.getInstance();
             DeviceProfile grid = app.getDynamicGrid().getDeviceProfile();
 
             mIntrinsicIconSize = drawableSize;
             mTotalWidth = totalSize;
-
+            
+            int top = mPreviewBackground.getTop();
+            
             final int previewSize = mPreviewBackground.getLayoutParams().height;
             final int previewPadding = FolderRingAnimator.sPreviewPadding;
 
@@ -499,8 +515,7 @@ public class FolderIcon extends FrameLayout implements FolderListener {
             mMaxPerspectiveShift = mBaselineIconSize * PERSPECTIVE_SHIFT_FACTOR;
 
             mPreviewOffsetX = (mTotalWidth - mAvailableSpaceInPreview) / 2;
-            mPreviewOffsetY = previewPadding + grid.folderBackgroundOffset;
-        }
+            mPreviewOffsetY = previewPadding + top;
     }
 
     private void computePreviewDrawingParams(Drawable d) {
@@ -550,7 +565,7 @@ public class FolderIcon extends FrameLayout implements FolderListener {
         float transX = offset + scaleOffsetCorrection;
         float totalScale = mBaselineIconScale * scale;
         final int overlayAlpha = (int) (80 * (1 - r));
-
+        
         if (params == null) {
             params = new PreviewItemDrawingParams(transX, transY, totalScale, overlayAlpha);
         } else {
@@ -564,6 +579,7 @@ public class FolderIcon extends FrameLayout implements FolderListener {
 
     private void drawPreviewItem(Canvas canvas, PreviewItemDrawingParams params) {
         canvas.save();
+        
         canvas.translate(params.transX + mPreviewOffsetX, params.transY + mPreviewOffsetY);
         canvas.scale(params.scale, params.scale);
         Drawable d = params.drawable;
@@ -593,7 +609,7 @@ public class FolderIcon extends FrameLayout implements FolderListener {
 
         // Update our drawing parameters if necessary
         if (mAnimating) {
-            computePreviewDrawingParams(mAnimParams.drawable);
+            computePreviewDrawingParams(mAnimParams.drawable); 
         } else {
             v = (TextView) items.get(0);
             d = v.getCompoundDrawables()[1];
@@ -601,6 +617,7 @@ public class FolderIcon extends FrameLayout implements FolderListener {
         }
 
         int nItemsInPreview = Math.min(items.size(), NUM_ITEMS_IN_PREVIEW);
+        
         if (!mAnimating) {
             for (int i = nItemsInPreview - 1; i >= 0; i--) {
                 v = (TextView) items.get(i);
@@ -608,6 +625,15 @@ public class FolderIcon extends FrameLayout implements FolderListener {
                     d = v.getCompoundDrawables()[1];
                     mParams = computePreviewItemDrawingParams(i, mParams);
                     mParams.drawable = d;
+                    
+                    int itemPadding = 2;
+                    int itemWidth = mIntrinsicIconSize / 3;
+                    float totalScale = (itemWidth - 2*itemPadding) / (float)mIntrinsicIconSize;
+                    
+                    mParams.scale = totalScale;
+                    mParams.transX = itemWidth*(i%3)+itemPadding;
+                    mParams.transY = itemWidth*(i/3)+itemPadding;
+                    
                     drawPreviewItem(canvas, mParams);
                 }
             }
@@ -633,7 +659,7 @@ public class FolderIcon extends FrameLayout implements FolderListener {
                     progress = 1 - progress;
                     mPreviewBackground.setAlpha(progress);
                 }
-
+                
                 mAnimParams.transX = transX0 + progress * (finalParams.transX - transX0);
                 mAnimParams.transY = transY0 + progress * (finalParams.transY - transY0);
                 mAnimParams.scale = scale0 + progress * (finalParams.scale - scale0);

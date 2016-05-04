@@ -658,9 +658,6 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
         boolean isXBeforeFirstPage = isRtl ? (x > mMaxScrollX) : (x < 0);
         boolean isXAfterLastPage = isRtl ? (x < 0) : (x > mMaxScrollX);
         
-        Log.d(TAG,"scrollTo:"+isXBeforeFirstPage+",isXAfterLastPage:"+isXAfterLastPage+",isRtl:"+isRtl+",isReordering(true):"+isReordering(true));
-        
-        Log.d(TAG,"scrollTo:"+x+",y:"+y);
         if (isXBeforeFirstPage) {
             super.scrollTo(0, y);
             if (mAllowOverScroll) {
@@ -720,9 +717,6 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
 
     // we moved this functionality to a helper function so SmoothPagedView can reuse it
     protected boolean computeScrollHelper() {
-    	
-    	Log.d(TAG,"computeScrollHelper:"+mScroller.computeScrollOffset()+",mNextPage:"+mNextPage);
-    	
         if (mScroller.computeScrollOffset()) {
             // Don't bother scrolling if the page does not need to be moved
             if (getScrollX() != mScroller.getCurrX()
@@ -1020,8 +1014,6 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
 
     protected void screenScrolled(int screenCenter) {
         boolean isInOverscroll = mOverScrollX < 0 || mOverScrollX > mMaxScrollX;
-
-        Log.d(TAG,"screenScrolled:"+isInOverscroll+",count:"+getChildCount()+",mFadeInAdjacentScreens:"+mFadeInAdjacentScreens);
         
         if (mFadeInAdjacentScreens && !isInOverscroll) {
             for (int i = 0; i < getChildCount(); i++) {
@@ -1756,7 +1748,6 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
             break;
 
         case MotionEvent.ACTION_MOVE:
-        	Log.d(TAG,"onTouchEvent ACTION_MOVE:"+mTouchState);
             if (mTouchState == TOUCH_STATE_SCROLLING) {
                 // Scroll to follow the motion event
                 final int pointerIndex = ev.findPointerIndex(mActivePointerId);
@@ -1771,7 +1762,6 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
                 // Only scroll and update mLastMotionX if we have moved some discrete amount.  We
                 // keep the remainder because we are actually testing if we've moved from the last
                 // scrolled position (which is discrete).
-                Log.d(TAG,"onTouchEvent pointerIndex:"+pointerIndex+",mActivePointerId:"+mActivePointerId+",deltaX:"+Math.abs(deltaX));
                 
                 if (Math.abs(deltaX) >= 1.0f) {
                     mTouchX += deltaX;
@@ -1882,7 +1872,6 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
             break;
 
         case MotionEvent.ACTION_UP:
-        	Log.d(TAG,"onTouchEvent ACTION_UP:"+mTouchState);
             if (mTouchState == TOUCH_STATE_SCROLLING) {
                 final int activePointerId = mActivePointerId;
                 final int pointerIndex = ev.findPointerIndex(activePointerId);
@@ -1900,7 +1889,6 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
                 boolean isFling = mTotalMotionX > MIN_LENGTH_FOR_FLING &&
                         Math.abs(velocityX) > mFlingThresholdVelocity;
                         
-                Log.d(TAG,"onTouchEvent ACTION_UP:"+mTouchState+",mFreeScroll:"+mFreeScroll);
                 if (!mFreeScroll) {
                     // In the case that the page is moved far to one direction and then is flung
                     // in the opposite direction, we use a threshold to determine whether we should
@@ -1920,17 +1908,14 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
                     boolean isVelocityXLeft = isRtl ? velocityX > 0 : velocityX < 0;
                     if (((isSignificantMove && !isDeltaXLeft && !isFling) ||
                             (isFling && !isVelocityXLeft)) && mCurrentPage > 0) {
-                    	Log.d(TAG,"onTouchEvent ACTION_UP:Step1");
                         finalPage = returnToOriginalPage ? mCurrentPage : mCurrentPage - 1;
                         snapToPageWithVelocity(finalPage, velocityX);
                     } else if (((isSignificantMove && isDeltaXLeft && !isFling) ||
                             (isFling && isVelocityXLeft)) &&
                             mCurrentPage < getChildCount() - 1) {
-                    	Log.d(TAG,"onTouchEvent ACTION_UP:Step2");
                         finalPage = returnToOriginalPage ? mCurrentPage : mCurrentPage + 1;
                         snapToPageWithVelocity(finalPage, velocityX);
                     } else {
-                    	Log.d(TAG,"onTouchEvent ACTION_UP:Step3");
                         snapToDestination();
                     }
                 } else {

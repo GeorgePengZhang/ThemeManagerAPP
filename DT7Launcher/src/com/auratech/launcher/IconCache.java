@@ -40,7 +40,12 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 import android.util.Log;
+
+import com.auratech.theme.utils.PreferencesManager;
+import com.auratech.theme.utils.ThemeImageLoader.ThemeImageOptions;
+import com.auratech.theme.utils.ThemeResouceManager;
 
 /**
  * Cache of application icons.  Icons can be made from any thread.
@@ -53,7 +58,7 @@ public class IconCache {
     private static final String RESOURCE_FILE_PREFIX = "icon_";
 
     private static final boolean DEBUG = true;
-
+    
     private static class CacheEntry {
         public Bitmap icon;
         public String title;
@@ -66,6 +71,11 @@ public class IconCache {
             new HashMap<ComponentName, CacheEntry>(INITIAL_ICON_CACHE_CAPACITY);
     private int mIconDpi;
 
+	private String mThemeKey;
+
+	private static int sIconWidth;
+	private static int sIconHeight;
+
     public IconCache(Context context) {
         ActivityManager activityManager =
                 (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
@@ -74,8 +84,14 @@ public class IconCache {
         mPackageManager = context.getPackageManager();
         mIconDpi = activityManager.getLauncherLargeIconDensity();
 
+        mThemeKey = PreferencesManager.getInstance(mContext).getThemeKey();
+        
         // need to set mIconDpi before getting default icon
         mDefaultIcon = makeDefaultIcon();
+        
+//        LauncherAppState app = LauncherAppState.getInstance();
+//        DeviceProfile grid = app.getDynamicGrid().getDeviceProfile();
+//        sIconWidth = sIconHeight = grid.iconSizePx;
     }
 
     public Drawable getFullResDefaultActivityIcon() {
@@ -86,7 +102,7 @@ public class IconCache {
     }
 
     public Drawable getFullResIcon(Resources resources, int iconId) {
-    	Log.d(TAG,"getFullResIcon Resources resources, int iconId");
+    	Log.d(TAG,"getFullResIcon Resources resources, int iconId:"+mIconDpi+",iconId:"+iconId);
     	
         Drawable d;
         try {
@@ -98,7 +114,7 @@ public class IconCache {
         return (d != null) ? d : getFullResDefaultActivityIcon();
     }
 
-    public Drawable getFullResIcon(String packageName, int iconId) {
+	public Drawable getFullResIcon(String packageName, int iconId) {
     	Log.d(TAG,"getFullResIcon String packageName, int iconId");
     	
         Resources resources;
@@ -137,7 +153,7 @@ public class IconCache {
                 return getFullResIcon(resources, iconId);
             }
         }
-
+        
         return getFullResDefaultActivityIcon();
     }
 
@@ -280,7 +296,6 @@ public class IconCache {
     	
     	Log.d(TAG,"cacheLocked:"+getResourceFilename(componentName));
     	
-    	
         CacheEntry entry = mCache.get(componentName);
         if (entry == null) {
             entry = new CacheEntry();
@@ -300,9 +315,19 @@ public class IconCache {
                 if (entry.title == null) {
                     entry.title = info.activityInfo.name;
                 }
-
-                entry.icon = Utilities.createIconBitmap(
-                        getFullResIcon(info), mContext);
+                
+                Bitmap bmp = null;
+                
+                if (!TextUtils.isEmpty(mThemeKey)) {
+                	bmp = ThemeResouceManager.getInstance().getImageResourceFromARZ(mThemeKey, info.activityInfo.packageName+".png", ThemeResouceManager.THEME_TYPE_ICONS, new ThemeImageOptions(72, 72));
+                	Log.d(TAG, "cacheLocked:"+mThemeKey+",packageName:"+info.activityInfo.packageName);
+                }
+                
+                if (bmp == null) {
+                	bmp = Utilities.createIconBitmap(getFullResIcon(info), mContext);
+                } 
+                
+            	entry.icon = bmp;
             } else {
                 entry.title = "";
                 Bitmap preloaded = getPreloadedIcon(componentName);

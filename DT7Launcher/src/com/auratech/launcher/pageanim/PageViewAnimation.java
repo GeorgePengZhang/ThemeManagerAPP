@@ -422,9 +422,6 @@ public class PageViewAnimation {
 			mScale = 1.0f;
 			mAlpha = 1.0f;
 			mTranslationX = 0f;
-		} else {
-//			mPivotX = pageWidth / 2.0f;
-//			mPivotY = pageHeight / 2.0f;
 		}
 	}
 }

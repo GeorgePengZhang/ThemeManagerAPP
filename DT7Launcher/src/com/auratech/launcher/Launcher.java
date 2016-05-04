@@ -111,9 +111,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.auratech.launcher.R;
 import com.auratech.launcher.DropTarget.DragObject;
 import com.auratech.launcher.pageanim.PageViewAnimation;
+import com.auratech.theme.ThemePreviewActivity;
 
 
 /**
@@ -1301,7 +1301,9 @@ public class Launcher extends Activity
                 @Override
                 public void onClick(View arg0) {
                     if (!mWorkspace.isSwitchingState()) {
-                        startSettings();
+//                        startSettings();
+                        
+                        startTheme();
                     }
                     }
             });
@@ -2325,6 +2327,16 @@ public class Launcher extends Activity
     protected ComponentName getWallpaperPickerComponent() {
         return new ComponentName(getPackageName(), LauncherWallpaperPickerActivity.class.getName());
     }
+    
+    protected void startTheme() {
+        final Intent intent = new Intent();
+        intent.setComponent(getThemeComponent());
+        startActivity(intent);
+    }
+
+    protected ComponentName getThemeComponent() {
+        return new ComponentName(getPackageName(), ThemePreviewActivity.class.getName());
+    }
 
     /**
      * Registers various content observers. The current implementation registers
@@ -3054,8 +3066,6 @@ public class Launcher extends Activity
         final int startDelay =
                 res.getInteger(R.integer.config_workspaceAppsCustomizeAnimationStagger);
 
-        
-//        Log.d(TAG,"showAppsCustomizeHelper:"+duration+",fadeDuration:"+fadeDuration+",scale:"+scale+",startDelay:"+startDelay);
         setPivotsForZoom(toView, scale);
 
         // Shrink workspaces away if going to AppsCustomize from workspace
@@ -3067,29 +3077,16 @@ public class Launcher extends Activity
             mAppsCustomizeTabHost.setContentTypeImmediate(contentType);
         }
 
-        final int width = toView.getWidth();
-        final int height = toView.getHeight();
-        
-//        final int duration = 5*1000;
-//        final int fadeDuration = 5*1000;
-        
-        
-        Log.d(TAG,"showAppsCustomizeHelper:"+width+",height:"+height);
         if (animated) {
-            toView.setScaleX(1f);
-            toView.setScaleY(1f);
+            toView.setScaleX(scale);
+            toView.setScaleY(scale);
             
             final LauncherViewPropertyAnimator scaleAnim = new LauncherViewPropertyAnimator(toView);
-            scaleAnim.
-                scaleX(1f).scaleY(1f).
-                setDuration(duration).
-                setInterpolator(new Workspace.ZoomOutInterpolator());
+            scaleAnim.scaleX(1f).scaleY(1f).setDuration(duration).setInterpolator(new Workspace.ZoomOutInterpolator());
 
             toView.setVisibility(View.VISIBLE);
             toView.setAlpha(0f);
-            final ObjectAnimator alphaAnim = LauncherAnimUtils
-                .ofFloat(toView, "alpha", 0f, 1f)
-                .setDuration(fadeDuration);
+            final ObjectAnimator alphaAnim = LauncherAnimUtils.ofFloat(toView, "alpha", 0f, 1f).setDuration(fadeDuration);
             alphaAnim.setInterpolator(new DecelerateInterpolator(1.5f));
             alphaAnim.addUpdateListener(new AnimatorUpdateListener() {
                 @Override
@@ -3103,41 +3100,16 @@ public class Launcher extends Activity
                 }
             });
             
-            final ObjectAnimator translationXAnim = LauncherAnimUtils
-                    .ofFloat(toView, "translationX", -width, 0.0f)
-                    .setDuration(fadeDuration);
-            translationXAnim.setInterpolator(new DecelerateInterpolator(1.5f));
-            final ObjectAnimator translationYAnim = LauncherAnimUtils
-                    .ofFloat(toView, "translationY", -height, 0.0f)
-                    .setDuration(fadeDuration);
-            translationYAnim.setInterpolator(new DecelerateInterpolator(1.5f));
-//            translationXAnim.addUpdateListener(new AnimatorUpdateListener() {
-//                    @Override
-//                    public void onAnimationUpdate(ValueAnimator animation) {
-//                        if (animation == null) {
-//                            throw new RuntimeException("animation is null");
-//                        }
-//                        float t = (Float) animation.getAnimatedValue();
-//                        dispatchOnLauncherTransitionStep(fromView, t);
-//                        dispatchOnLauncherTransitionStep(toView, t);
-//                    }
-//                });
-
             // toView should appear right at the end of the workspace shrink
             // animation
             mStateAnimation = LauncherAnimUtils.createAnimatorSet();
-//            mStateAnimation.play(scaleAnim).after(startDelay);
+            mStateAnimation.play(scaleAnim).after(startDelay);
             mStateAnimation.play(alphaAnim).after(startDelay);
-            mStateAnimation.play(translationXAnim).after(startDelay);
-            mStateAnimation.play(translationYAnim).after(startDelay);
-
+            
             mStateAnimation.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationStart(Animator animation) {
                     // Prepare the position
-//                    toView.setTranslationX(0.0f);
-//                    toView.setTranslationY(0.0f);
-                	
                     toView.setVisibility(View.VISIBLE);
                     toView.bringToFront();
                 }
@@ -3149,6 +3121,7 @@ public class Launcher extends Activity
 					// not fix that
 					toView.setScaleX(1.0f);
 					toView.setScaleY(1.0f);
+					toView.setAlpha(1f);
 					
 					//add end
                     dispatchOnLauncherTransitionEnd(fromView, animated, false);
@@ -3238,41 +3211,32 @@ public class Launcher extends Activity
             mStateAnimation.cancel();
             mStateAnimation = null;
         }
+        
         Resources res = getResources();
 
         final int duration = res.getInteger(R.integer.config_appsCustomizeZoomOutTime);
-        final int fadeOutDuration =
-                res.getInteger(R.integer.config_appsCustomizeFadeOutTime);
-        final float scaleFactor = (float)
-                res.getInteger(R.integer.config_appsCustomizeZoomScaleFactor);
+        final int fadeOutDuration = res.getInteger(R.integer.config_appsCustomizeFadeOutTime);
+        final float scaleFactor = (float)res.getInteger(R.integer.config_appsCustomizeZoomScaleFactor);
         final View fromView = mAppsCustomizeTabHost;
         final View toView = mWorkspace;
         Animator workspaceAnim = null;
+        
         if (toState == Workspace.State.NORMAL) {
             int stagger = res.getInteger(R.integer.config_appsCustomizeWorkspaceAnimationStagger);
-            workspaceAnim = mWorkspace.getChangeStateAnimation(
-                    toState, animated, stagger, -1);
+            workspaceAnim = mWorkspace.getChangeStateAnimation(toState, animated, stagger, -1);
 			StateNormal = true;
-        } else if (toState == Workspace.State.SPRING_LOADED ||
-                toState == Workspace.State.OVERVIEW) {
-            workspaceAnim = mWorkspace.getChangeStateAnimation(
-                    toState, animated);
+        } else if (toState == Workspace.State.SPRING_LOADED ||toState == Workspace.State.OVERVIEW) {
+            workspaceAnim = mWorkspace.getChangeStateAnimation(toState, animated);
 			StateNormal = false;
         }
 
         setPivotsForZoom(fromView, scaleFactor);
         showHotseat(animated);
         if (animated) {
-            final LauncherViewPropertyAnimator scaleAnim =
-                    new LauncherViewPropertyAnimator(fromView);
-            scaleAnim.
-                scaleX(scaleFactor).scaleY(scaleFactor).
-                setDuration(duration).
-                setInterpolator(new Workspace.ZoomInInterpolator());
+            final LauncherViewPropertyAnimator scaleAnim = new LauncherViewPropertyAnimator(fromView);
+            scaleAnim.scaleX(scaleFactor).scaleY(scaleFactor).setDuration(duration).setInterpolator(new Workspace.ZoomInInterpolator());
 
-            final ObjectAnimator alphaAnim = LauncherAnimUtils
-                .ofFloat(fromView, "alpha", 1f, 0f)
-                .setDuration(fadeOutDuration);
+            final ObjectAnimator alphaAnim = LauncherAnimUtils.ofFloat(fromView, "alpha", 1f, 0f).setDuration(fadeOutDuration);
             alphaAnim.setInterpolator(new AccelerateDecelerateInterpolator());
             alphaAnim.addUpdateListener(new AnimatorUpdateListener() {
                 @Override

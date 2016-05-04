@@ -40,7 +40,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.auratech.launcher.R;
+import com.auratech.theme.utils.PreferencesManager;
+import com.auratech.theme.utils.ThemeImageLoader.ThemeImageOptions;
+import com.auratech.theme.utils.ThemeResouceManager;
 
 /**
  * Various utilities shared amongst the Launcher's classes.
@@ -59,6 +61,7 @@ public final class Utilities {
     private static final Paint sDisabledPaint = new Paint();
     private static final Rect sOldBounds = new Rect();
     private static final Canvas sCanvas = new Canvas();
+    private static Bitmap mIconBgBitmap;
 
     static {
         sCanvas.setDrawFilter(new PaintFlagsDrawFilter(Paint.DITHER_FLAG,
@@ -127,7 +130,7 @@ public final class Utilities {
     }
 
     /**
-     * Returns a bitmap suitable for the all apps view.
+     * Returns a bitmap suitable for the all apps view. »æÖÆicon±³¾°
      */
     public static Bitmap createIconBitmap(Drawable icon, Context context) {
         synchronized (sCanvas) { // we share the statics :-(
@@ -166,6 +169,7 @@ public final class Utilities {
             int textureWidth = sIconTextureWidth;
             int textureHeight = sIconTextureHeight;
 
+            Log.d(TAG,"createIconBitmap:"+sourceWidth+",sourceHeight:"+sourceHeight+",width:"+width+",height:"+height);
             final Bitmap bitmap = Bitmap.createBitmap(textureWidth, textureHeight,
                     Bitmap.Config.ARGB_8888);
             final Canvas canvas = sCanvas;
@@ -175,22 +179,60 @@ public final class Utilities {
             final int top = (textureHeight-height) / 2;
 
             @SuppressWarnings("all") // suppress dead code warning
-            final boolean debug = false;
+            final boolean debug = true;
             if (debug) {
                 // draw a big box for the icon for debugging
-                canvas.drawColor(sColors[sColorIndex]);
-                if (++sColorIndex >= sColors.length) sColorIndex = 0;
-                Paint debugPaint = new Paint();
-                debugPaint.setColor(0xffcccc00);
-                canvas.drawRect(left, top, left+width, top+height, debugPaint);
+//                canvas.drawColor(sColors[sColorIndex]);
+//                if (++sColorIndex >= sColors.length) sColorIndex = 0;
+//                Paint debugPaint = new Paint();
+//                debugPaint.setColor(0xffcccc00);
+//                canvas.drawRect(left, top, left+width, top+height, debugPaint);
+//            	Bitmap bmp = null;
+//                
+//                
+//            	int backWidth = bmp.getWidth();
+//                int backHeight = bmp.getHeight();
+//                if(backWidth != sIconWidth || backHeight != sIconHeight)
+//                {
+//                    Matrix matrix = new Matrix();
+//                    matrix.postScale((float)sIconWidth/backWidth, (float)sIconHeight/backHeight);
+//                    canvas.drawBitmap(Bitmap.createBitmap(bmp, 0, 0, backWidth, backHeight, matrix, true), 0.0f, 0.0f, paint);
+//                }else
+//                {
+//                    canvas.drawBitmap(bmp, 0.0f, 0.0f, paint);
+//                }
+            	if (mIconBgBitmap == null) {
+            		String theme = PreferencesManager.getInstance(context).getThemeKey();
+            		mIconBgBitmap = ThemeResouceManager.getInstance().getImageResourceFromARZ(theme, "icon_background.png", ThemeResouceManager.THEME_TYPE_ICONS, new ThemeImageOptions(sIconTextureWidth, sIconTextureHeight));
+            	}
+                	
+            	if (mIconBgBitmap != null) {
+            		Paint paint = new Paint(Paint.FILTER_BITMAP_FLAG);
+                    paint.setAntiAlias(true);
+            		
+            		int backWidth = mIconBgBitmap.getWidth();
+					int backHeight = mIconBgBitmap.getHeight();
+					if(backWidth != sIconWidth || backHeight != sIconHeight)
+					{
+						Matrix matrix = new Matrix();
+						matrix.postScale((float)sIconWidth/backWidth, (float)sIconHeight/backHeight);
+						canvas.drawBitmap(Bitmap.createBitmap(mIconBgBitmap, 0, 0, backWidth, backHeight, matrix, true), 0.0f, 0.0f, paint);
+					} else {
+						canvas.drawBitmap(mIconBgBitmap, 0.0f, 0.0f, paint);
+					}
+            	}
             }
-
+            
+            int padding = 10;
+            if (mIconBgBitmap == null) {
+            	padding = 0;
+            }
+            
             sOldBounds.set(icon.getBounds());
-            icon.setBounds(left, top, left+width, top+height);
+            icon.setBounds(left+padding, top+padding, left+width-padding, top+height-padding);
             icon.draw(canvas);
             icon.setBounds(sOldBounds);
             canvas.setBitmap(null);
-
             return bitmap;
         }
     }
@@ -314,6 +356,8 @@ public final class Utilities {
 
         sIconWidth = sIconHeight = (int) resources.getDimension(R.dimen.app_icon_size);
         sIconTextureWidth = sIconTextureHeight = sIconWidth;
+        
+        Log.d(TAG, "initStatics:"+sIconWidth);
 
         sBlurPaint.setMaskFilter(new BlurMaskFilter(5 * density, BlurMaskFilter.Blur.NORMAL));
         sGlowColorPressedPaint.setColor(0xffffc300);
@@ -328,6 +372,7 @@ public final class Utilities {
     public static void setIconSize(int widthPx) {
         sIconWidth = sIconHeight = widthPx;
         sIconTextureWidth = sIconTextureHeight = widthPx;
+        Log.d(TAG, "setIconSize:"+sIconWidth);
     }
 
     public static void scaleRect(Rect r, float scale) {
