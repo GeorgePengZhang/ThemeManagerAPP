@@ -201,7 +201,8 @@ public class AppsCustomizeTabHost extends TabHost implements LauncherTransitiona
     private void onTabChangedEnd(AppsCustomizePagedView.ContentType type) {
         int bgAlpha = (int) (255 * (getResources().getInteger(
             R.integer.config_appsCustomizeSpringLoadedBgAlpha) / 100f));
-        setBackgroundColor(Color.argb(bgAlpha, 0, 0, 0));
+//        setBackgroundColor(Color.argb(bgAlpha, 0, 0, 0));
+        setBackgroundColor(Color.argb(0, 0, 0, 0));
         mAppsCustomizePane.setContentType(type);
     }
 

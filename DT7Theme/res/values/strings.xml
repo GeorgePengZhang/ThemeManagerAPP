@@ -2,7 +2,26 @@
 <resources>
 
     <string name="app_name">DT7_ThemeAPP</string>
-    <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
 
+    <string name="themes">"Themes"</string>
+    <string name="pageanim_normal">"Classic"</string>
+    <string name="pageanim_turntable">"Windmill"</string>
+    <string name="pageanim_layered">"Cascade"</string>
+    <string name="pageanim_rotate">"Rotate"</string>
+    <string name="pageanim_pageturn">"Page"</string>
+    <string name="pageanim_rotatebylefttoppoint" >"Card"</string>
+    <string name="pageanim_rotatebycenterpoint" >"Compass"</string>
+    <string name="pageanim_blocks" >"Box"</string>
+    <string name="theme_import">"Import"</string>
+    <string name="theme_download">"Download"</string>
+    <string name="theme_local">"Local"</string>
+    <string name="theme_online">"Online"</string>
+    <string name="theme_apply">"Apply"</string>
+    <string name="theme_importlocalthemes">"Import local themes"</string>
+    <string name="theme_ok">"OK"</string>
+    <string name="theme_cancel">"Cancel"</string>
+    <string name="theme_importingtheme">"Importing theme"</string>
+    <string name="theme_nofiles">"No files"</string>
+    
+    
 </resources>

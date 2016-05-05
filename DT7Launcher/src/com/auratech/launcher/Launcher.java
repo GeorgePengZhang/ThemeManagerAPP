@@ -1081,7 +1081,7 @@ public class Launcher extends Activity
     }
 
     protected boolean hasSettings() {
-        return true;
+        return false;
     }
 
     protected void startSettings() {
@@ -1294,6 +1294,18 @@ public class Launcher extends Activity
             }
         });
         wallpaperButton.setOnTouchListener(getHapticFeedbackTouchListener());
+        
+        View themeButton = findViewById(R.id.theme_button);
+        themeButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                if (!mWorkspace.isSwitchingState()) {
+                	startTheme();
+                }
+            }
+        });
+        themeButton.setOnTouchListener(getHapticFeedbackTouchListener());
+        
 
         View settingsButton = findViewById(R.id.settings_button);
         if (hasSettings()) {
@@ -1301,17 +1313,15 @@ public class Launcher extends Activity
                 @Override
                 public void onClick(View arg0) {
                     if (!mWorkspace.isSwitchingState()) {
-//                        startSettings();
-                        
-                        startTheme();
+                        startSettings();
                     }
-                    }
+                }
             });
             settingsButton.setOnTouchListener(getHapticFeedbackTouchListener());
         } else {
             settingsButton.setVisibility(View.GONE);
-            FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) widgetButton.getLayoutParams();
-            lp.gravity = Gravity.END | Gravity.TOP;
+//            FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) widgetButton.getLayoutParams();
+//            lp.gravity = Gravity.END | Gravity.TOP;
             widgetButton.requestLayout();
         }
         

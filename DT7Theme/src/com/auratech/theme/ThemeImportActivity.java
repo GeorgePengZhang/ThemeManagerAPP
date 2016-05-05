@@ -74,7 +74,7 @@ public class ThemeImportActivity extends Activity {
 
 				// 将选中arz文件 拷贝到theme/.data/目录下
 				if (!TextUtils.isEmpty(selected)) {
-					mSure.setText("导入中...");
+					mSure.setText(R.string.theme_importingtheme);
 					mSure.setEnabled(false);
 					mCancel.setEnabled(false);
 
@@ -143,7 +143,7 @@ public class ThemeImportActivity extends Activity {
 	private void initTab() {
 		mBack = (LinearLayout) findViewById(R.id.id_back);
 		mTitle = (TextView) mBack.getChildAt(1);
-		mTitle.setText("本地主题导入");
+		mTitle.setText(R.string.theme_importlocalthemes);
 		mBack.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -210,7 +210,7 @@ public class ThemeImportActivity extends Activity {
 				mListPath.add(mVolumePaths[i]);
 			}
 			mAdapter.notifyDataSetChanged();
-			mTitle.setText("本地主题导入");
+			mTitle.setText(R.string.theme_importlocalthemes);
 			mHint.setVisibility(View.INVISIBLE);
 			mContent.setVisibility(View.VISIBLE);
 		} else {

@@ -223,7 +223,7 @@ public final class Utilities {
             	}
             }
             
-            int padding = 10;
+            int padding = 18;
             if (mIconBgBitmap == null) {
             	padding = 0;
             }

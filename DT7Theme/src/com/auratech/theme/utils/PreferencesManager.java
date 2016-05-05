@@ -20,7 +20,7 @@ public class PreferencesManager {
 		Context packageContext = null;
 		
 		try {
-			packageContext = context.createPackageContext("com.auratech.theme", Context.CONTEXT_IGNORE_SECURITY);
+			packageContext = context.createPackageContext("com.auratech.launcher", Context.CONTEXT_IGNORE_SECURITY);
 		} catch (NameNotFoundException e) {
 			e.printStackTrace();
 		} 

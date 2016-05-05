@@ -38,7 +38,7 @@
                 android:layout_centerInParent="true"
                 android:background="@drawable/theme_preview_btn"
                 android:gravity="center"
-                android:text="导入"
+                android:text="@string/theme_import"
                 android:textColor="@color/bottom_btn_focuse"
                 android:textSize="@dimen/bottom_btn_size" />
         </RelativeLayout>

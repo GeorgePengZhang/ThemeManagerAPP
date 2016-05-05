@@ -139,7 +139,6 @@ public class IconCache {
 
     public Drawable getFullResIcon(ActivityInfo info) {
     	Log.d(TAG,"getFullResIcon ActivityInfo info");
-    	
         Resources resources;
         try {
             resources = mPackageManager.getResourcesForApplication(
@@ -319,8 +318,8 @@ public class IconCache {
                 Bitmap bmp = null;
                 
                 if (!TextUtils.isEmpty(mThemeKey)) {
-                	bmp = ThemeResouceManager.getInstance().getImageResourceFromARZ(mThemeKey, info.activityInfo.packageName+".png", ThemeResouceManager.THEME_TYPE_ICONS, new ThemeImageOptions(72, 72));
-                	Log.d(TAG, "cacheLocked:"+mThemeKey+",packageName:"+info.activityInfo.packageName);
+                	bmp = ThemeResouceManager.getInstance().getImageResourceFromARZ(mThemeKey, info.activityInfo.name+".png", ThemeResouceManager.THEME_TYPE_ICONS, new ThemeImageOptions(72, 72));
+                	Log.d(TAG, "cacheLocked:"+mThemeKey+",packageName:"+info.activityInfo.name);
                 }
                 
                 if (bmp == null) {

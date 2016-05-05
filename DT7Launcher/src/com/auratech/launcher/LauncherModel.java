@@ -2620,7 +2620,7 @@ public class LauncherModel extends BroadcastReceiver {
                 // This builds the icon bitmaps.
                 AppInfo info = new  AppInfo(packageManager, app, mIconCache, mLabelCache);
                 final ComponentName component = info.intent.getComponent();
-                Log.d(TAG,"loadAllApps:"+component.getPackageName()+",label:"+info.title);
+                Log.d(TAG,"loadAllApps:"+component.getPackageName()+",getClassName:"+component.getClassName()+",label:"+info.title);
                 
 				if (!(("com.uei.sample".equals(component.getPackageName()))
                    //  ||("com.google.android.gms".equals(component.getPackageName()))

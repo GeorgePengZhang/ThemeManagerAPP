@@ -68,6 +68,19 @@
                 android:text="@string/settings_button_text"
                 android:textAllCaps="true"
                 android:textSize="12sp" />
+            
+            <TextView
+                android:id="@+id/theme_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawablePadding="4dp"
+                android:drawableTop="@drawable/theme_button"
+                android:fontFamily="sans-serif-condensed"
+                android:gravity="center_horizontal"
+                android:text="@string/themes"
+                android:textAllCaps="true"
+                android:textSize="12sp" />
         </LinearLayout>
 
         <HorizontalScrollView

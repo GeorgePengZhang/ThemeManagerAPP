@@ -17,7 +17,7 @@
             android:layout_weight="1"
             android:background="@drawable/theme_top_preview_selected"
             android:gravity="center"
-            android:text="本地"
+            android:text="@string/theme_local"
             android:textColor="@color/tab_text_normal"
             android:textSize="@dimen/tab_text_size" />
 
@@ -27,7 +27,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="在线"
+            android:text="@string/theme_online"
             android:textColor="@color/tab_text_normal"
             android:textSize="@dimen/tab_text_size" />
     </LinearLayout>
