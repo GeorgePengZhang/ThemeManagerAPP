@@ -18,14 +18,6 @@
     <!-- Far-left screen [0] -->
 
     <!-- Left screen [1] -->
-    <appwidget
-        launcher:packageName="com.android.settings"
-        launcher:className="com.android.settings.widget.SettingsAppWidgetProvider"
-        launcher:screen="1"
-        launcher:x="0"
-        launcher:y="3"
-        launcher:spanX="4"
-        launcher:spanY="1" />
 
     <!-- Middle screen [2] -->
     <appwidget
@@ -34,33 +26,56 @@
         launcher:screen="2"
         launcher:x="1"
         launcher:y="0"
-        launcher:spanX="2"
-        launcher:spanY="2" />
+        launcher:spanX="4"
+        launcher:spanY="3" />
     <favorite
-        launcher:packageName="com.android.camera"
-        launcher:className="com.android.camera.Camera"
+        launcher:packageName="com.android.contacts"
+        launcher:className="com.android.contacts.activities.DialtactsActivity"
         launcher:screen="2"
-        launcher:x="0"
-        launcher:y="3" />
-
-    <!-- Right screen [3] -->
-    <favorite
-        launcher:packageName="com.android.gallery3d"
-        launcher:className="com.android.gallery3d.app.Gallery"
-        launcher:screen="3"
         launcher:x="1"
         launcher:y="3" />
     <favorite
-        launcher:packageName="com.android.settings"
-        launcher:className="com.android.settings.Settings"
-        launcher:screen="3"
+        launcher:packageName="com.socialnmobile.dictapps.notepad.color.note"
+        launcher:className="com.socialnmobile.colornote.activity.Main"
+        launcher:screen="2"
         launcher:x="2"
         launcher:y="3" />
+    <favorite
+        launcher:packageName="com.android.camera2"
+        launcher:className="com.android.camera.CameraLauncher"
+        launcher:screen="2"
+        launcher:x="3"
+        launcher:y="3" />
+    <favorite
+        launcher:packageName="com.auratech.activity"
+        launcher:className="com.auratech.activity.MainActivity"
+        launcher:screen="2"
+        launcher:x="4"
+        launcher:y="3" />
+
+    <!-- Right screen [3] -->
+    <appwidget
+        launcher:packageName="com.android.settings"
+        launcher:className="com.android.settings.widget.SettingsAppWidgetProvider"
+        launcher:screen="3"
+        launcher:x="1"
+        launcher:y="3"
+        launcher:spanX="4"
+        launcher:spanY="1" />
+    
+    <appwidget
+        launcher:packageName="com.auratech.launcher"
+        launcher:className="com.auratech.launcher.widget.GalleryWidgetProvider"
+        launcher:screen="3"
+        launcher:x="1"
+        launcher:y="0"
+        launcher:spanX="4"
+        launcher:spanY="3" />
 
     <!-- Far-right screen [4] -->
 
     <!-- Hotseat (We use the screen as the position of the item in the hotseat) -->
-    <favorite
+   <!--  <favorite
         launcher:packageName="com.android.dialer"
         launcher:className="com.android.dialer.DialtactsActivity"
         launcher:container="-101"
@@ -87,5 +102,5 @@
         launcher:container="-101"
         launcher:screen="5"
         launcher:x="5"
-        launcher:y="0" />
+        launcher:y="0" /> -->
 </favorites>

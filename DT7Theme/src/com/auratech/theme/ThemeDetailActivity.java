@@ -111,7 +111,7 @@ public class ThemeDetailActivity extends Activity {
 					
 					WallpaperManager wallpaperManager = WallpaperManager.getInstance(getApplicationContext());
 					try {
-						Bitmap bmp = ThemeResouceManager.getInstance().getImageFromResource(mTheme, mBean.getWallPaper(), ThemeResouceManager.THEME_TYPE_WALLPAPER, mBean.getPath());
+						Bitmap bmp = ThemeResouceManager.getInstance().getImageFromResource(mTheme, mBean.getWallPaper(), ThemeResouceManager.THEME_TYPE_WALLPAPER, mBean.getPath(), new ThemeImageOptions(1024, 600));
 						if (bmp != null) {
 							wallpaperManager.setBitmap(bmp);
 						}

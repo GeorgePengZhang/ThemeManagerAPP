@@ -524,7 +524,7 @@ public class DeviceProfile {
                         searchBarBounds.width(), edgeMarginPx);
             } else {
                 padding.set(searchBarBounds.width(), edgeMarginPx,
-                        hotseatBarHeightPx, edgeMarginPx);
+                        hotseatBarHeightPx, edgeMarginPx+pageIndicatorHeightPx);
             }
         } else {
             if (isTablet()) {
@@ -724,9 +724,16 @@ public class DeviceProfile {
         // Layout the page indicators
         View pageIndicator = launcher.findViewById(R.id.page_indicator);
         if (pageIndicator != null) {
-            if (hasVerticalBarLayout) {
+            if (hasVerticalBarLayout){
                 // Hide the page indicators when we have vertical search/hotseat
-                pageIndicator.setVisibility(View.GONE);
+//                pageIndicator.setVisibility(View.GONE);
+                lp = (FrameLayout.LayoutParams) pageIndicator.getLayoutParams();
+                lp.gravity = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
+                lp.width = LayoutParams.WRAP_CONTENT;
+                lp.height = LayoutParams.WRAP_CONTENT;
+                lp.bottomMargin = edgeMarginPx;
+                pageIndicator.setLayoutParams(lp);
+                
             } else {
                 // Put the page indicators above the hotseat
                 lp = (FrameLayout.LayoutParams) pageIndicator.getLayoutParams();
@@ -741,6 +748,7 @@ public class DeviceProfile {
         // Layout AllApps
         AppsCustomizeTabHost host = (AppsCustomizeTabHost)
                 launcher.findViewById(R.id.apps_customize_pane);
+         
         if (host != null) {
             // Center the all apps page indicator
             int pageIndicatorHeight = (int) (pageIndicatorHeightPx * Math.min(1f,
@@ -757,6 +765,7 @@ public class DeviceProfile {
             AppsCustomizePagedView pagedView = (AppsCustomizePagedView)
                     host.findViewById(R.id.apps_customize_pane_content);
             padding = new Rect();
+            
             if (pagedView != null) {
                 // Constrain the dimensions of all apps so that it does not span the full width
                 int paddingLR = (availableWidthPx - (allAppsCellWidthPx * allAppsNumCols)) /
@@ -765,6 +774,7 @@ public class DeviceProfile {
                         (2 * (allAppsNumRows + 1));
                 paddingLR = Math.min(paddingLR, (int)((paddingLR + paddingTB) * 0.75f));
                 paddingTB = Math.min(paddingTB, (int)((paddingLR + paddingTB) * 0.75f));
+                
                 int maxAllAppsWidth = (allAppsNumCols * (allAppsCellWidthPx + 2 * paddingLR));
                 int gridPaddingLR = (availableWidthPx - maxAllAppsWidth) / 2;
                 // Only adjust the side paddings on landscape phones, or tablets

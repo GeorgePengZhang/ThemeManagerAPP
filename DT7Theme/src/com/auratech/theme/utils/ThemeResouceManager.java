@@ -26,12 +26,14 @@ public class ThemeResouceManager {
 			+ File.separator
 			+ "Theme/.data/";
 	
-//	public static final String THEME_USED_PATH = "/data/system/theme";
-	public static final String THEME_USED_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator+"system/theme";
+	public static final String THEME_USED_PATH = "/data/system/theme";
+//	public static final String THEME_USED_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator+"system/theme";
 	public static final String THEME_USED_NAME = "theme_using.arz";
+	public static final String THEME_USED_ABSOLUTE_PATH = THEME_USED_PATH+File.separator+THEME_USED_NAME;
 	
 	public static final String THEME_DEFAULT_PATH = "/system/media/theme/default/";
 	public static final String THEME_DEAFULT_NAME = "theme_default.arz";
+	public static final String THEME_DEAFULT_ABSOLUTE_PATH = THEME_DEFAULT_PATH+THEME_DEAFULT_NAME;
 	
 	public static final String THEME_TYPE_ICONS = "icons/";
 	public static final String THEME_TYPE_WALLPAPER = "wallpaper/";
@@ -146,6 +148,11 @@ public class ThemeResouceManager {
 
 		if (!mThemeDir.exists()) {
 			mThemeDir.mkdirs();
+		}
+		
+		//如果是系统默认的就读取/system/media/theme目录下的主题，不是就读取/data/system/theme/目录下的主题
+		if (!THEME_DEAFULT_ABSOLUTE_PATH.equals(themePath)) {
+			themePath = THEME_USED_ABSOLUTE_PATH;
 		}
 
 		bmp = ThemeImageLoader.getInstance().getBitmapFromInputStream(themePath, resTheme + resouces, options);

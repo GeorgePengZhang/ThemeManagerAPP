@@ -38,7 +38,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            launcher:defaultScreen="@integer/config_workspaceDefaultScreen" />
+            launcher:defaultScreen="@integer/config_workspaceDefaultScreen"
+            launcher:pageIndicator="@+id/page_indicator" />
 
         <include
             android:id="@+id/hotseat"
@@ -49,13 +50,24 @@
 
         <include
             android:id="@+id/search_drop_target_bar"
-            layout="@layout/search_drop_target_bar"
-            />
+            layout="@layout/search_drop_target_bar" />
 
         <include
             android:id="@+id/overview_panel"
             layout="@layout/overview_panel"
             android:visibility="gone" />
+
+        <!--
+             Keep these behind the workspace so that they are not visible when
+             we go into AllApps
+        -->
+
+        <include
+            android:id="@+id/page_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|bottom"
+            layout="@layout/page_indicator" />
 
         <!--
              The Workspace cling must appear under the AppsCustomizePagedView below to ensure
