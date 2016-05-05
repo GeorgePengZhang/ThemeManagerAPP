@@ -44,6 +44,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityOptions;
 import android.app.SearchManager;
+import android.app.WallpaperManager;
 import android.appwidget.AppWidgetHostView;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProviderInfo;
@@ -114,6 +115,9 @@ import android.widget.Toast;
 import com.auratech.launcher.DropTarget.DragObject;
 import com.auratech.launcher.pageanim.PageViewAnimation;
 import com.auratech.theme.ThemePreviewActivity;
+import com.auratech.theme.utils.PreferencesManager;
+import com.auratech.theme.utils.ThemeResouceManager;
+import com.auratech.theme.utils.ThemeImageLoader.ThemeImageOptions;
 
 
 /**
@@ -502,6 +506,21 @@ public class Launcher extends Activity
                 mLauncherClings.showMigrationCling();
             } else {
                 mLauncherClings.showFirstRunCling();
+                
+                String themeKey = PreferencesManager.getInstance(this).getThemeKey();
+                
+                if (themeKey.equals(ThemeResouceManager.THEME_DEAFULT_ABSOLUTE_PATH)) {
+                	WallpaperManager wallpaperManager = WallpaperManager.getInstance(getApplicationContext());
+            		try {
+            			Bitmap bmp = ThemeResouceManager.getInstance().getImageFromResource(ThemeResouceManager.THEME_DEAFULT_NAME, "default_wallpaper.jpg", ThemeResouceManager.THEME_TYPE_WALLPAPER, ThemeResouceManager.THEME_DEFAULT_PATH, new ThemeImageOptions(1024, 600));
+            			if (bmp != null) {
+            				wallpaperManager.setBitmap(bmp);
+            			}
+            		} catch (IOException e) {
+            			e.printStackTrace();
+            		}
+                }
+                
             }
         } else {
             mLauncherClings.removeFirstRunAndMigrationClings();

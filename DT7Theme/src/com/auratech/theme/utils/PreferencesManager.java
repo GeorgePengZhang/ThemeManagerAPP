@@ -48,7 +48,7 @@ public class PreferencesManager {
 		
 		String themekey = mSharedPreferences.getString(THEME_KEY, "");
 		if (TextUtils.isEmpty(themekey)) {
-			themekey = ThemeResouceManager.THEME_DEFAULT_PATH+ThemeResouceManager.THEME_DEAFULT_NAME;
+			themekey = ThemeResouceManager.THEME_DEAFULT_ABSOLUTE_PATH;
 		}
 	
 		return themekey;
