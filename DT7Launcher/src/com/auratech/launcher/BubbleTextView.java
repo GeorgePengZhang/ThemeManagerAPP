@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.Region;
 import android.graphics.Region.Op;
@@ -37,17 +38,17 @@ import android.widget.TextView;
  * too aggressive.
  */
 public class BubbleTextView extends TextView {
-//    static final float SHADOW_LARGE_RADIUS = 4.0f;
-//    static final float SHADOW_SMALL_RADIUS = 1.75f;
-//    static final float SHADOW_Y_OFFSET = 2.0f;
-//    static final int SHADOW_LARGE_COLOUR = 0xDD000000;
-//    static final int SHADOW_SMALL_COLOUR = 0xCC000000;
+    static final float SHADOW_LARGE_RADIUS = 4.0f;
+    static final float SHADOW_SMALL_RADIUS = 1.75f;
+    static final float SHADOW_Y_OFFSET = 2.0f;
+    static final int SHADOW_LARGE_COLOUR = 0xDD000000;
+    static final int SHADOW_SMALL_COLOUR = 0xCC000000;
     
-    static final float SHADOW_LARGE_RADIUS = 0.0f;
-    static final float SHADOW_SMALL_RADIUS = 0.00f;
-    static final float SHADOW_Y_OFFSET = 0.0f;
-    static final int SHADOW_LARGE_COLOUR = 0x00000000;
-    static final int SHADOW_SMALL_COLOUR = 0x00000000;
+//    static final float SHADOW_LARGE_RADIUS = 0.0f;
+//    static final float SHADOW_SMALL_RADIUS = 0.00f;
+//    static final float SHADOW_Y_OFFSET = 0.0f;
+//    static final int SHADOW_LARGE_COLOUR = 0x00000000;
+//    static final int SHADOW_SMALL_COLOUR = 0x00000000;
     
     static final float PADDING_H = 8.0f;
     static final float PADDING_V = 3.0f;
@@ -95,10 +96,40 @@ public class BubbleTextView extends TextView {
         // Ensure we are using the right text size
         LauncherAppState app = LauncherAppState.getInstance();
         DeviceProfile grid = app.getDynamicGrid().getDeviceProfile();
-        setTextSize(TypedValue.COMPLEX_UNIT_PX, grid.iconTextSizePx);
-        setTextColor(getResources().getColor(R.color.workspace_icon_text_color));
+        
+        int fontSize = app.getDescriptionBean().getFontSize();
+        int iconTextSize = 0;
+        if (fontSize != -1) {
+        	iconTextSize = DynamicGrid.pxFromDp(fontSize, getResources().getDisplayMetrics());
+        } else {
+        	iconTextSize = grid.iconTextSizePx;
+        }
+        
+//        setTextSize(TypedValue.COMPLEX_UNIT_PX, grid.iconTextSizePx);
+//        setTextColor(getResources().getColor(R.color.workspace_icon_text_color));
+        setTextSize(TypedValue.COMPLEX_UNIT_PX, iconTextSize);
+        setTextColor(getTextColorFromConfig(getResources().getColor(R.color.workspace_icon_text_color)));
     }
-
+    
+    public int getTextColorFromConfig(int defaultColor) {
+    	LauncherAppState app = LauncherAppState.getInstance();
+    	
+    	int alpha = app.getDescriptionBean().getFontColorAlpha();
+    	int red = app.getDescriptionBean().getFontColorRed();
+    	int green = app.getDescriptionBean().getFontColorGreen();
+    	int blue = app.getDescriptionBean().getFontColorBlue();
+		 
+    	int color;
+    	if (alpha == -1 && red == -1 && green == -1 && blue == -1) {
+    		color = defaultColor;
+    	} else {
+    		color = Color.argb(alpha, red, green, blue);
+    	}
+    	
+    	return color;
+    }
+    
+    
     private void init() {
         mLongPressHelper = new CheckLongPressHelper(this);
         mBackground = getBackground();

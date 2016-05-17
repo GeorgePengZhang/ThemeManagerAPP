@@ -45,7 +45,6 @@ import android.widget.TextView;
 
 import com.auratech.launcher.DropTarget.DragObject;
 import com.auratech.launcher.FolderInfo.FolderListener;
-import com.auratech.theme.utils.PreferencesManager;
 import com.auratech.theme.utils.ThemeImageLoader.ThemeImageOptions;
 import com.auratech.theme.utils.ThemeResouceManager;
 
@@ -167,9 +166,9 @@ public class FolderIcon extends FrameLayout implements FolderListener {
         lp.height = grid.folderIconSizePx;
 
         if (mIconBgBitmap == null) {
-        	String theme = PreferencesManager.getInstance(launcher).getThemeKey();
-        	
-    		mIconBgBitmap = ThemeResouceManager.getInstance().getImageResourceFromARZ(theme, "icon_folder.png", ThemeResouceManager.THEME_TYPE_ICONS, new ThemeImageOptions(lp.width, lp.height));
+//        	String theme = Launcher.mThemeKey;
+        	String themeKey = LauncherAppState.getInstance().getThemeKey();
+    		mIconBgBitmap = ThemeResouceManager.getInstance().getImageResourceFromARZ(themeKey, "icon_folder.png", ThemeResouceManager.THEME_TYPE_ICONS, new ThemeImageOptions(lp.width, lp.height));
     	}
         
         if (mIconBgBitmap != null) {

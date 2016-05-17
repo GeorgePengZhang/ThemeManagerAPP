@@ -38,5 +38,12 @@
     <string name="theme_cancel">"取消"</string>
     <string name="theme_importingtheme">"导入中..."</string>
     <string name="theme_nofiles">"没有文件"</string>
+    <string name="theme_no">"暂无主题"</string>
+    <string name="theme_network_connection">"正在连接..."</string>
+    <string name="theme_downloading">"正在下载"</string>
+    <string name="theme_is_downloading">"下载"</string>
+    <string name="theme_application">"应用"</string>
+    <string name="theme_prompt">"本主题不存在，请检查sdcard"</string>
+    
     
 </resources>

@@ -22,6 +22,12 @@
     <string name="theme_cancel">"Cancel"</string>
     <string name="theme_importingtheme">"Importing theme"</string>
     <string name="theme_nofiles">"No files"</string>
+    <string name="theme_no">"No theme"</string>
+    <string name="theme_network_connection">"The network connection..."</string>
+    <string name="theme_downloading">"Is downloading"</string>
+     <string name="theme_is_downloading">"downloading"</string>
+     <string name="theme_application">"Apply"</string>
+     <string name="theme_prompt">"Theme does not exist, please check the sdcard"</string>
     
     
 </resources>

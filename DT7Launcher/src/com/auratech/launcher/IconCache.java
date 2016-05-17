@@ -43,7 +43,6 @@ import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.auratech.theme.utils.PreferencesManager;
 import com.auratech.theme.utils.ThemeImageLoader.ThemeImageOptions;
 import com.auratech.theme.utils.ThemeResouceManager;
 
@@ -71,11 +70,6 @@ public class IconCache {
             new HashMap<ComponentName, CacheEntry>(INITIAL_ICON_CACHE_CAPACITY);
     private int mIconDpi;
 
-	private String mThemeKey;
-
-	private static int sIconWidth;
-	private static int sIconHeight;
-
     public IconCache(Context context) {
         ActivityManager activityManager =
                 (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
@@ -84,7 +78,7 @@ public class IconCache {
         mPackageManager = context.getPackageManager();
         mIconDpi = activityManager.getLauncherLargeIconDensity();
 
-        mThemeKey = PreferencesManager.getInstance(mContext).getThemeKey();
+//        mThemeKey = PreferencesManager.getInstance(mContext).getThemeKey();
         
         // need to set mIconDpi before getting default icon
         mDefaultIcon = makeDefaultIcon();
@@ -316,10 +310,11 @@ public class IconCache {
                 }
                 
                 Bitmap bmp = null;
+                String themeKey = LauncherAppState.getInstance().getThemeKey();
                 
-                if (!TextUtils.isEmpty(mThemeKey)) {
-                	bmp = ThemeResouceManager.getInstance().getImageResourceFromARZ(mThemeKey, info.activityInfo.name+".png", ThemeResouceManager.THEME_TYPE_ICONS, new ThemeImageOptions(72, 72));
-                	Log.d(TAG, "cacheLocked:"+mThemeKey+",packageName:"+info.activityInfo.name);
+                if (!TextUtils.isEmpty(themeKey)) {
+                	bmp = ThemeResouceManager.getInstance().getImageResourceFromARZ(themeKey, info.activityInfo.name+".png", ThemeResouceManager.THEME_TYPE_ICONS, new ThemeImageOptions(72, 72));
+                	Log.d(TAG, "cacheLocked:"+themeKey+",packageName:"+info.activityInfo.name);
                 }
                 
                 if (bmp == null) {

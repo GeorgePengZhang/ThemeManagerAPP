@@ -58,7 +58,6 @@
             android:textColor="#FFFFFFFF"
             android:textSize="13sp"
             android:textAlignment="viewStart"
-            android:fontFamily="sans-serif-condensed"
             android:shadowRadius="2.0"
             android:shadowColor="#B0000000" />
 
@@ -75,7 +74,6 @@
 
             android:textColor="#FFAAAAAA"
             android:textSize="12sp"
-            android:fontFamily="sans-serif-condensed"
             android:shadowRadius="2.0"
             android:shadowColor="#B0000000" />
     </LinearLayout>

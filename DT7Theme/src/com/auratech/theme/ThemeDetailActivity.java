@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -97,15 +98,25 @@ public class ThemeDetailActivity extends Activity {
 					if (!dirFile.exists()) {
 						dirFile.mkdirs();
 					}
+					dirFile.setReadable(true, false);
+					dirFile.setExecutable(true, false);
+					
+					ThemeResouceManager.getInstance().deleteDirFile(dirFile);
 					
 					File destFile = new File(dirFile, ThemeResouceManager.THEME_USED_NAME);
-					destFile.canRead();
 					
 					try {
 						FileCopyManager.copyFile(sourceFile, destFile);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
+					destFile.setReadable(true, false);
+					destFile.setExecutable(true, false);
+					
+					ThemeResouceManager.getInstance().unZip(ThemeResouceManager.THEME_USED_ABSOLUTE_PATH, ThemeResouceManager.THEME_USED_PATH);
+					
+					ThemeResouceManager.getInstance().setDefalutSound(getApplicationContext());
+					
 					
 					PreferencesManager.getInstance(getApplicationContext()).setThemeKey(mBean.getPath()+mTheme);
 					
@@ -122,12 +133,17 @@ public class ThemeDetailActivity extends Activity {
 					ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
 					activityManager.killBackgroundProcesses("com.auratech.launcher");
 					
+					
 					Intent intent = new Intent(Intent.ACTION_MAIN);  
 					intent.addCategory(Intent.CATEGORY_HOME);  
 					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  
 	                startActivity(intent); 
 					
 					android.os.Process.killProcess(android.os.Process.myPid());
+					
+					PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+					powerManager.reboot("就是要重启");
+					
 					mClicked = true;
 				}
 			}

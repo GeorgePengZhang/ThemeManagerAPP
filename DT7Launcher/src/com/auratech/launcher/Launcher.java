@@ -115,9 +115,10 @@ import android.widget.Toast;
 import com.auratech.launcher.DropTarget.DragObject;
 import com.auratech.launcher.pageanim.PageViewAnimation;
 import com.auratech.theme.ThemePreviewActivity;
+import com.auratech.theme.utils.DescriptionBean;
 import com.auratech.theme.utils.PreferencesManager;
-import com.auratech.theme.utils.ThemeResouceManager;
 import com.auratech.theme.utils.ThemeImageLoader.ThemeImageOptions;
+import com.auratech.theme.utils.ThemeResouceManager;
 
 
 /**
@@ -353,7 +354,7 @@ public class Launcher extends Activity
     private Rect mRectForFolderAnimation = new Rect();
 
     private BubbleTextView mWaitingForResume;
-
+    
     private Runnable mBuildLayersRunnable = new Runnable() {
         public void run() {
             if (mWorkspace != null) {
@@ -452,7 +453,6 @@ public class Launcher extends Activity
                     Environment.getExternalStorageDirectory() + "/launcher");
         }
 
-
         checkForLocaleChange();
         setContentView(R.layout.launcher);
 
@@ -507,9 +507,9 @@ public class Launcher extends Activity
             } else {
                 mLauncherClings.showFirstRunCling();
                 
-                String themeKey = PreferencesManager.getInstance(this).getThemeKey();
-                
-                if (themeKey.equals(ThemeResouceManager.THEME_DEAFULT_ABSOLUTE_PATH)) {
+                //++ add steven zhang by 20160516
+                String themeKey = app.getThemeKey();
+                if (ThemeResouceManager.THEME_DEAFULT_ABSOLUTE_PATH.equals(themeKey)) {
                 	WallpaperManager wallpaperManager = WallpaperManager.getInstance(getApplicationContext());
             		try {
             			Bitmap bmp = ThemeResouceManager.getInstance().getImageFromResource(ThemeResouceManager.THEME_DEAFULT_NAME, "default_wallpaper.jpg", ThemeResouceManager.THEME_TYPE_WALLPAPER, ThemeResouceManager.THEME_DEFAULT_PATH, new ThemeImageOptions(1024, 600));
@@ -520,7 +520,7 @@ public class Launcher extends Activity
             			e.printStackTrace();
             		}
                 }
-                
+                //++ add steven zhang by 20160516
             }
         } else {
             mLauncherClings.removeFirstRunAndMigrationClings();

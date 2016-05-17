@@ -19,6 +19,7 @@ package com.auratech.launcher;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Region;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
@@ -62,8 +63,39 @@ public class PagedViewIcon extends TextView {
         // Ensure we are using the right text size
         LauncherAppState app = LauncherAppState.getInstance();
         DeviceProfile grid = app.getDynamicGrid().getDeviceProfile();
-        setTextSize(TypedValue.COMPLEX_UNIT_PX, grid.allAppsIconTextSizePx);
+//        setTextSize(TypedValue.COMPLEX_UNIT_PX, grid.allAppsIconTextSizePx);
+        int fontSize = app.getDescriptionBean().getFontSize();
+        int iconTextSize = 0;
+        if (fontSize != -1) {
+        	iconTextSize = DynamicGrid.pxFromDp(fontSize, getResources().getDisplayMetrics());
+        } else {
+        	iconTextSize = grid.allAppsIconTextSizePx;
+        }
+        
+//        setTextSize(TypedValue.COMPLEX_UNIT_PX, grid.iconTextSizePx);
+//        setTextColor(getResources().getColor(R.color.workspace_icon_text_color));
+        setTextSize(TypedValue.COMPLEX_UNIT_PX, iconTextSize);
+        setTextColor(getTextColorFromConfig(getResources().getColor(R.color.workspace_icon_text_color)));
     }
+    
+    public int getTextColorFromConfig(int defaultColor) {
+    	LauncherAppState app = LauncherAppState.getInstance();
+    	
+    	int alpha = app.getDescriptionBean().getFontColorAlpha();
+    	int red = app.getDescriptionBean().getFontColorRed();
+    	int green = app.getDescriptionBean().getFontColorGreen();
+    	int blue = app.getDescriptionBean().getFontColorBlue();
+		 
+    	int color;
+    	if (alpha == -1 && red == -1 && green == -1 && blue == -1) {
+    		color = defaultColor;
+    	} else {
+    		color = Color.argb(alpha, red, green, blue);
+    	}
+    	
+    	return color;
+    }
+    
 
     public void applyFromApplicationInfo(AppInfo info, boolean scaleUp,
             PagedViewIcon.PressedCallback cb) {

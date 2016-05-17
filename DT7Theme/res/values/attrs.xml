@@ -6,5 +6,40 @@
         <attr name="border_color" format="color" />
         <attr name="border_radius" format="dimension" />
     </declare-styleable>
+    
+    <declare-styleable name="NumberProgressBar">
+        <attr name="progress_current" format="integer"/>
+        <attr name="progress_max" format="integer"/>
+
+        <attr name="progress_unreached_color" format="color"/>
+        <attr name="progress_reached_color" format="color"/>
+
+        <attr name="progress_reached_bar_height" format="dimension"/>
+        <attr name="progress_unreached_bar_height" format="dimension"/>
+
+        <attr name="progress_text_size" format="dimension"/>
+        <attr name="progress_text_color" format="color"/>
+
+        <attr name="progress_text_offset" format="dimension"/>
+
+        <attr name="progress_text_visibility" format="enum">
+            <enum name="visible" value="0"/>
+            <enum name="invisible" value="1"/>
+        </attr>
+    </declare-styleable>
+    
+        <declare-styleable name="Themes">
+        <attr name="numberProgressBarStyle" format="reference"/>
+    </declare-styleable>
+    
+<declare-styleable name="ProgressButton">
+        <attr name="background" format="color" />
+        <attr name="foreground" format="color" />
+        <attr name="textcolor" format="color" />
+        <attr name="text" format="string" />
+        <attr name="max" format="integer"/>
+        <attr name="progress" format="integer"/>
+  		<attr name="textSize" format="dimension"/>
+    </declare-styleable>
 
 </resources>

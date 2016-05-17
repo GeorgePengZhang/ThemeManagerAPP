@@ -152,14 +152,13 @@ public class ThemeLocalFragment extends Fragment {
 		protected Void doInBackground(Void... params) {
 			String[] themeTotal = ThemeResouceManager.getInstance().getAllLocalTheme();
 			list.clear();
-			DescriptionBean dbn = getDefaultThemeDescription();
+			DescriptionBean dbn = ThemeResouceManager.getInstance().getThemeDescriptionBean(ThemeResouceManager.THEME_DEAFULT_ABSOLUTE_PATH);
 			if (dbn != null) {
 				list.add(dbn);
 			}
 			
 			if (themeTotal != null) {
 				for (String theme:themeTotal) {
-					Log.d("TAG", "doInBackground:"+theme);
 					DescriptionBean bean = ThemeResouceManager.getInstance().parseDescription(theme);
 					if (bean != null) {
 						list.add(bean);
@@ -193,13 +192,11 @@ public class ThemeLocalFragment extends Fragment {
 			options.height = 200;
 			options.imageView = imageView;
 					
-			Log.d("TAG", "showImageView:"+themePath);
 			ThemeImageLoader.getInstance().loadImage(themePath, themeResource, options);
 		}
 	}
 	
-	private static DescriptionBean getDefaultThemeDescription() {
-		return ThemeResouceManager.getInstance().parseDescription(ThemeResouceManager.THEME_DEAFULT_NAME, ThemeResouceManager.THEME_DEFAULT_PATH);
-	}
-
+//	private static DescriptionBean getDefaultThemeDescription() {
+//		return ThemeResouceManager.getInstance().parseDescription(ThemeResouceManager.THEME_DEAFULT_NAME, ThemeResouceManager.THEME_DEFAULT_PATH);
+//	}
 }

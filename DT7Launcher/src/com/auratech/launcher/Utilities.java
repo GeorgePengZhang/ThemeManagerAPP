@@ -40,7 +40,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.auratech.theme.utils.PreferencesManager;
+import com.auratech.theme.utils.DescriptionBean;
 import com.auratech.theme.utils.ThemeImageLoader.ThemeImageOptions;
 import com.auratech.theme.utils.ThemeResouceManager;
 
@@ -202,8 +202,9 @@ public final class Utilities {
 //                    canvas.drawBitmap(bmp, 0.0f, 0.0f, paint);
 //                }
             	if (mIconBgBitmap == null) {
-            		String theme = PreferencesManager.getInstance(context).getThemeKey();
-            		mIconBgBitmap = ThemeResouceManager.getInstance().getImageResourceFromARZ(theme, "icon_background.png", ThemeResouceManager.THEME_TYPE_ICONS, new ThemeImageOptions(sIconTextureWidth, sIconTextureHeight));
+//            		String theme = PreferencesManager.getInstance(context).getThemeKey();
+            		String themeKey = LauncherAppState.getInstance().getThemeKey();
+            		mIconBgBitmap = ThemeResouceManager.getInstance().getImageResourceFromARZ(themeKey, "icon_background.png", ThemeResouceManager.THEME_TYPE_ICONS, new ThemeImageOptions(sIconTextureWidth, sIconTextureHeight));
             	}
                 	
             	if (mIconBgBitmap != null) {
@@ -223,13 +224,44 @@ public final class Utilities {
             	}
             }
             
-            int padding = 18;
-            if (mIconBgBitmap == null) {
-            	padding = 0;
+            
+//            int padding = 18;
+//            if (mIconBgBitmap == null) {
+//            	padding = 0;
+//            }
+            int iconPadLeft = 0;
+            int iconPadTop = 0;
+            int iconPadRight = 0;
+            int iconPadBottom = 0;
+            
+            DescriptionBean bean = LauncherAppState.getInstance().getDescriptionBean();
+            if (bean != null) {
+            	iconPadLeft = bean.getIconPadLeft();
+                iconPadTop = bean.getIconPadTop();
+                iconPadRight = bean.getIconPadRight();
+                iconPadBottom = bean.getIconPadBottom();
             }
             
+            if (iconPadLeft == -1) {
+            	iconPadLeft = 0;
+            }
+            
+            if (iconPadTop == -1) {
+            	iconPadTop = 0;
+            }
+            
+            if (iconPadRight == -1) {
+            	iconPadRight = 0;
+            }
+            
+            if (iconPadBottom == -1) {
+            	iconPadBottom = 0;
+            }
+            
+            Log.d(TAG, "createIconBitmap iconPadLeft:"+iconPadLeft+",iconPadTop:"+iconPadTop+",iconPadRight:"+iconPadRight+",iconPadBottom:"+iconPadBottom);
+            
             sOldBounds.set(icon.getBounds());
-            icon.setBounds(left+padding, top+padding, left+width-padding, top+height-padding);
+            icon.setBounds(left+iconPadLeft, top+iconPadTop, left+width-iconPadRight, top+height-iconPadBottom);
             icon.draw(canvas);
             icon.setBounds(sOldBounds);
             canvas.setBitmap(null);

@@ -37,7 +37,6 @@
                 android:layout_weight="1"
                 android:drawablePadding="4dp"
                 android:drawableTop="@drawable/wallpaper_button"
-                android:fontFamily="sans-serif-condensed"
                 android:gravity="center_horizontal"
                 android:text="@string/wallpaper_button_text"
                 android:textAllCaps="true"
@@ -50,7 +49,6 @@
                 android:layout_weight="1"
                 android:drawablePadding="4dp"
                 android:drawableTop="@drawable/widget_button"
-                android:fontFamily="sans-serif-condensed"
                 android:gravity="center_horizontal"
                 android:text="@string/widget_button_text"
                 android:textAllCaps="true"
@@ -63,7 +61,6 @@
                 android:layout_weight="1"
                 android:drawablePadding="4dp"
                 android:drawableTop="@drawable/setting_button"
-                android:fontFamily="sans-serif-condensed"
                 android:gravity="center_horizontal"
                 android:text="@string/settings_button_text"
                 android:textAllCaps="true"
@@ -76,7 +73,6 @@
                 android:layout_weight="1"
                 android:drawablePadding="4dp"
                 android:drawableTop="@drawable/theme_button"
-                android:fontFamily="sans-serif-condensed"
                 android:gravity="center_horizontal"
                 android:text="@string/themes"
                 android:textAllCaps="true"
@@ -96,88 +92,88 @@
                 android:showDividers="middle" >
 
                 <TextView
-                    android:layout_width="@dimen/dynamic_grid_overview_bar_item_width"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:drawablePadding="4dp"
                     android:drawableTop="@drawable/anim_normal_button"
-                    android:fontFamily="sans-serif-condensed"
                     android:gravity="center_horizontal"
                     android:text="@string/pageanim_normal"
                     android:textAllCaps="true"
                     android:textSize="12sp" />
 
                 <TextView
-                    android:layout_width="@dimen/dynamic_grid_overview_bar_item_width"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:drawablePadding="4dp"
                     android:drawableTop="@drawable/anim_turntable_button"
-                    android:fontFamily="sans-serif-condensed"
                     android:gravity="center_horizontal"
                     android:text="@string/pageanim_turntable"
                     android:textAllCaps="true"
                     android:textSize="12sp" />
 
                 <TextView
-                    android:layout_width="@dimen/dynamic_grid_overview_bar_item_width"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:drawablePadding="4dp"
                     android:drawableTop="@drawable/anim_layered_button"
-                    android:fontFamily="sans-serif-condensed"
                     android:gravity="center_horizontal"
                     android:text="@string/pageanim_layered"
                     android:textAllCaps="true"
                     android:textSize="12sp" />
 
                 <TextView
-                    android:layout_width="@dimen/dynamic_grid_overview_bar_item_width"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:drawablePadding="4dp"
                     android:drawableTop="@drawable/anim_rotate_button"
-                    android:fontFamily="sans-serif-condensed"
                     android:gravity="center_horizontal"
                     android:text="@string/pageanim_rotate"
                     android:textAllCaps="true"
                     android:textSize="12sp" />
 
                 <TextView
-                    android:layout_width="@dimen/dynamic_grid_overview_bar_item_width"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:drawablePadding="4dp"
                     android:drawableTop="@drawable/anim_pageturn_button"
-                    android:fontFamily="sans-serif-condensed"
                     android:gravity="center_horizontal"
                     android:text="@string/pageanim_pageturn"
                     android:textAllCaps="true"
                     android:textSize="12sp" />
 
                 <TextView
-                    android:layout_width="@dimen/dynamic_grid_overview_bar_item_width"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:drawablePadding="4dp"
                     android:drawableTop="@drawable/anim_card_button"
-                    android:fontFamily="sans-serif-condensed"
                     android:gravity="center_horizontal"
                     android:text="@string/pageanim_rotatebylefttoppoint"
                     android:textAllCaps="true"
                     android:textSize="12sp" />
 
                 <TextView
-                    android:layout_width="@dimen/dynamic_grid_overview_bar_item_width"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:drawablePadding="4dp"
                     android:drawableTop="@drawable/anim_compass_button"
-                    android:fontFamily="sans-serif-condensed"
                     android:gravity="center_horizontal"
                     android:text="@string/pageanim_rotatebycenterpoint"
                     android:textAllCaps="true"
                     android:textSize="12sp" />
 
                 <TextView
-                    android:layout_width="@dimen/dynamic_grid_overview_bar_item_width"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:drawablePadding="4dp"
                     android:drawableTop="@drawable/anim_blocks_button"
-                    android:fontFamily="sans-serif-condensed"
                     android:gravity="center_horizontal"
                     android:text="@string/pageanim_blocks"
                     android:textAllCaps="true"

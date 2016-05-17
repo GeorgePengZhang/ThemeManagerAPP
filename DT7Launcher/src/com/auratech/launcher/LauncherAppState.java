@@ -20,6 +20,9 @@ import java.lang.ref.WeakReference;
 
 import com.auratech.launcher.R;
 import com.auratech.launcher.pageanim.PageViewAnimation;
+import com.auratech.theme.utils.DescriptionBean;
+import com.auratech.theme.utils.PreferencesManager;
+import com.auratech.theme.utils.ThemeResouceManager;
 
 import android.app.SearchManager;
 import android.content.ComponentName;
@@ -55,6 +58,11 @@ public class LauncherAppState implements DeviceProfile.DeviceProfileCallbacks {
 
     private DynamicGrid mDynamicGrid;
 	private PageViewAnimation mPageViewAnimation;
+	
+	//++ add steven zhang by 20160516
+    private String mThemeKey;
+    private DescriptionBean mDescriptionBean;
+    //++ add steven zhang by 20160516
 
     public static LauncherAppState getInstance() {
         if (INSTANCE == null) {
@@ -88,14 +96,20 @@ public class LauncherAppState implements DeviceProfile.DeviceProfileCallbacks {
         if (sContext.getResources().getBoolean(R.bool.debug_memory_enabled)) {
             MemoryTracker.startTrackingMe(sContext, "L");
         }
+        
+        //++ add steven zhang by 20160516
+        mThemeKey = PreferencesManager.getInstance(sContext).getThemeKey();
+        mDescriptionBean = ThemeResouceManager.getInstance().getThemeDescriptionBean(mThemeKey);
+        //++ add steven zhang by 20160516
 
         // set sIsScreenXLarge and mScreenDensity *before* creating icon cache
         mIsScreenLarge = isScreenLarge(sContext.getResources());
         mScreenDensity = sContext.getResources().getDisplayMetrics().density;
 
         recreateWidgetPreviewDb();
-        mIconCache = new IconCache(sContext);
         
+        mIconCache = new IconCache(sContext);
+      //++ add steven zhang 
         mPageViewAnimation = new PageViewAnimation();
 
         mAppFilter = AppFilter.loadByName(sContext.getString(R.string.app_filter_class));
@@ -171,6 +185,14 @@ public class LauncherAppState implements DeviceProfile.DeviceProfileCallbacks {
     
     PageViewAnimation getPageAnimation() {
     	return mPageViewAnimation;
+    }
+    
+    String getThemeKey() {
+    	return mThemeKey;
+    }
+    
+    DescriptionBean getDescriptionBean() {
+    	return mDescriptionBean;
     }
 
     LauncherModel getModel() {

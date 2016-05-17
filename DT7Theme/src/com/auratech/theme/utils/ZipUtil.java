@@ -129,6 +129,8 @@ public class ZipUtil {
 					if (!parent.exists()) {
 						parent.mkdirs();
 					}
+					parent.setReadable(true, false);
+					parent.setExecutable(true, false);
 
 					inputStream = zipFile.getInputStream(entry);
 
@@ -140,6 +142,8 @@ public class ZipUtil {
 
 					inputStream.close();
 				}
+				file.setReadable(true, false);
+				file.setExecutable(true, false);
 			}
 			this.zipFile.close();
 		} catch (IOException ioe) {
@@ -148,7 +152,6 @@ public class ZipUtil {
 	}
 
 	/**
-	 * 
 	 * @param zipFilePath
 	 * @param resoucesPathName
 	 * @return
