@@ -20,7 +20,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 
-import com.auratech.theme.bean.DescriptionBean;
 import com.auratech.theme.utils.ThemeImageLoader.ThemeImageOptions;
 
 public class ThemeResouceManager {

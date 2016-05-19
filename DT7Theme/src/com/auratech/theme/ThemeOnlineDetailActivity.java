@@ -3,24 +3,26 @@ package com.auratech.theme;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Timer;
 
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
@@ -30,16 +32,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.auratech.theme.bean.ThemeModel;
-import com.auratech.theme.executor.ServerConfig;
+import com.auratech.theme.bean.ThemeInfoBean;
 import com.auratech.theme.utils.BitmapHelp;
 import com.auratech.theme.utils.CircleImageView;
 import com.auratech.theme.utils.FileCopyManager;
-import com.auratech.theme.utils.FileUtils;
+import com.auratech.theme.utils.HttpConfig;
 import com.auratech.theme.utils.PreferencesManager;
-import com.auratech.theme.utils.ThemeImageLoader;
 import com.auratech.theme.utils.ThemeResouceManager;
-import com.auratech.theme.utils.VolleyImageLoader;
+import com.auratech.theme.utils.ThemeImageLoader.ThemeImageOptions;
 import com.auratech.theme.utils.view.NumberProgressBar;
 import com.auratech.theme.utils.view.OnProgressBarListener;
 import com.lidroid.xutils.BitmapUtils;
@@ -47,8 +47,6 @@ import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.sample.R;
-import com.lidroid.xutils.util.LogUtils;
 
 /**
  * 在線主題詳情界面
@@ -71,30 +69,37 @@ public class ThemeOnlineDetailActivity extends Activity implements
 	private ViewPager mViewPager;
 	private LinearLayout mIndicator;
 	private TextView mApply;
+	private TextView mDelete;
+	private TextView mDownload;
 	protected boolean mClicked;
 
 	/* 以下是 在線主題屬性 * */
-	private ThemeModel themBean;
-	private VolleyImageLoader mVolleyImageLoader;
-
+	private ThemeInfoBean themBean;
 
 	private NumberProgressBar bnp;
-	private boolean upSuccs = false;
 	private BitmapUtils mBitmapUtils;
+	private String mThemeDownloadTempPath = null;
+	
+	
+	private AlertDialog mDialog;
+	private TextView mContent;
+	private View mApplyingLayout;
+	private NumberProgressBar mProgressBar;
+	private View mRebootLayout;
+	private View mDeleteLayout;
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.theme_detail_layout);
 		bnp = (NumberProgressBar) findViewById(R.id.npb_progress);
-		mVolleyImageLoader = VolleyImageLoader
-				.getImageLoader(ThemeOnlineDetailActivity.this);
-		Bundle intent = getIntent().getBundleExtra(THEME_ONLINE);
-		themBean = (ThemeModel) intent.getSerializable(THEME_ONLINE);
+		themBean = getIntent().getParcelableExtra(THEME_ONLINE);
 		previewsList = getListData(themBean);
 		mClicked = false;
-		filenameTemp = ThemeResouceManager.THEME_PATH_UPLOADER + "/"
-				+ themBean.getThemefile();
+		mThemeDownloadTempPath = ThemeResouceManager.THEME_PATH + ThemeResouceManager.getInstance().getThemeFileName(themBean.getThemefile());
+		createDir(mThemeDownloadTempPath);
 		bnp.setOnProgressBarListener(this);
 		
 		mBitmapUtils = BitmapHelp.getBitmapUtils(getApplicationContext());
@@ -105,11 +110,10 @@ public class ThemeOnlineDetailActivity extends Activity implements
 		initTab();
 		initIndicator();
 		initViews();
+		initDialog();
 	}
-	
-	
 
-	private ArrayList<String> getListData(ThemeModel themBean) {
+	private ArrayList<String> getListData(ThemeInfoBean themBean) {
 		ArrayList<String> list = new ArrayList<String>();
 		if (null != themBean) {
 			String da[] = themBean.getPreviewPath().toString().split(";");
@@ -127,49 +131,36 @@ public class ThemeOnlineDetailActivity extends Activity implements
 	}
 
 	// 创建文件夹及文件
-	public void CreateText(String flieUrl) {
-		File file = new File(FileUtils.mSdRootPath);
-		if (!file.exists()) {
-			try {
-				// 按照指定的路径创建文件夹
-				file.mkdirs();
-			} catch (Exception e) {
-				// TODO: handle exception
-			}
-		}
-		File dir = new File(flieUrl);
+	public String createDir(String filePath) {
+		File file = new File(filePath);
+		File dir = file.getParentFile();
 		if (!dir.exists()) {
 			try {
 				// 在指定的文件夹中创建文件
-				dir.createNewFile();
+				dir.mkdirs();
 			} catch (Exception e) {
 			}
 		}
-
+		
+		return file.getName();
 	}
 
-	private String filenameTemp = null;
-
-	@SuppressWarnings("unchecked")
 	public void download() {
-
-		CreateText(filenameTemp);
 		HttpUtils http = new HttpUtils();
 		
-		Log.e("TAG", "download:"+(ServerConfig.SERVER_URL + "/" + themBean.getThemefile()));
-		
-		http.download(ServerConfig.SERVER_URL + "/" + themBean.getThemefile(),
-				filenameTemp, true, true, new RequestCallBack() {
+		http.download(HttpConfig.SERVER_URL + "/" + themBean.getThemefile(), mThemeDownloadTempPath, true, false, new RequestCallBack<File>() {
 					@Override
 					public void onStart() {
-						mApply.setText(getString(R.string.theme_network_connection));
+						mDownload.setEnabled(false);
+						mDownload.setText(getString(R.string.theme_waiting));
 					}
 
 					@Override
 					public void onLoading(final long total, final long current,
 							boolean isUploading) {
 						bnp.setVisibility(View.VISIBLE);
-						mApply.setText(getString(R.string.theme_downloading));
+						mDownload.setEnabled(false);
+						mDownload.setText(getString(R.string.theme_downloading));
 						//总共大小
 						bnp.incrementProgressBy((int)((double)current/(double)total*100));
 					}
@@ -178,120 +169,74 @@ public class ThemeOnlineDetailActivity extends Activity implements
 					public void onFailure(HttpException error, String msg) {
 						bnp.setVisibility(View.GONE);
 						bnp.setProgress(0);
-						mApply.setText(getString(R.string.theme_is_downloading));
-						upSuccs = false;
-						Toast.makeText(ThemeOnlineDetailActivity.this, msg, 500)
-								.show();
-						System.out.println("error" + msg);
+						mDownload.setEnabled(true);
+						mDownload.setText(getString(R.string.theme_download));
+						Toast.makeText(ThemeOnlineDetailActivity.this, msg, 500).show();
 					}
 
 					@Override
-					public void onSuccess(ResponseInfo responseInfo) {
-						Toast.makeText(getApplicationContext(),
-								"Download Successful"+(ServerConfig.SERVER_URL + "/" + themBean.getThemefile()), Toast.LENGTH_SHORT)
-								.show();
+					public void onSuccess(ResponseInfo<File> responseInfo) {
+						Toast.makeText(getApplicationContext(),"Download Successful", Toast.LENGTH_SHORT).show();
 						bnp.setProgress(100);
-						upSuccs = true;
-						mApply.setText(getString(R.string.theme_application));
+						mDownload.setEnabled(true);
+						mDownload.setVisibility(View.GONE);
+						mApply.setVisibility(View.VISIBLE);
+						mDelete.setVisibility(View.VISIBLE);
 					}
-					
 				});
-
 	}
 
 	private void initViews() {
 		mApply = (TextView) findViewById(R.id.id_apply);
-		File file = new File(ThemeResouceManager.THEME_PATH_UPLOADER + "/"
-				+ themBean.getThemefile());
-
+		mDelete = (TextView) findViewById(R.id.id_cancel);
+		mDownload = (TextView) findViewById(R.id.id_download);
+		
+		
+		
+		File file = new File(mThemeDownloadTempPath);
 		if (file.exists()) {
-			upSuccs = true;
-			mApply.setText(getString(R.string.theme_application));
-
+			mDownload.setVisibility(View.GONE);
+			mApply.setVisibility(View.VISIBLE);
+			mDelete.setVisibility(View.VISIBLE);
 		} else {
-			upSuccs = false;
-			mApply.setText(getString(R.string.theme_is_downloading));
+			mDownload.setVisibility(View.VISIBLE);
+			mDownload.setEnabled(true);
+			mApply.setVisibility(View.GONE);
+			mDelete.setVisibility(View.GONE);
+			
+			mDownload.setText(getString(R.string.theme_download));
 		}
+		
+		
 		mApply.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				if (!mClicked) {
-					if (!upSuccs) {
-						bnp.setVisibility(View.VISIBLE);
-						download();
-					} else {
-						bnp.setVisibility(View.GONE);
-						File sourceFile = new File(filenameTemp);
-
-						if (!sourceFile.exists()) {
-							Toast.makeText(getApplicationContext(),
-									getString(R.string.theme_prompt), Toast.LENGTH_SHORT)
-									.show();
-							// mClicked = true;
-							upSuccs = false;
-							return;
-						}
-
-						File dirFile = new File(
-								ThemeResouceManager.THEME_USED_PATH);
-						if (!dirFile.exists()) {
-							dirFile.mkdirs();
-						}
-						String daFlie[] = themBean.getThemefile().split("/");
-						File destFile = new File(dirFile, daFlie[1]);
-						destFile.canRead();
-
-						
-						File dirFiles = new File(
-								ThemeResouceManager.THEME_USED_ABSOLUTE_PATH);
-						if (!dirFile.exists()) {
-							dirFile.mkdirs();
-						}
-						try {
-							FileCopyManager.copyFile(sourceFile, destFile);
-							FileCopyManager.copyFile(sourceFile, dirFiles);
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-
-						PreferencesManager
-								.getInstance(getApplicationContext())
-								.setThemeKey(
-										ThemeResouceManager.THEME_PATH_UPLOADER
-												+ "/" + themBean.getThemefile());
-
-						WallpaperManager wallpaperManager = WallpaperManager
-								.getInstance(getApplicationContext());
-						try {
-							Bitmap bmp = ThemeResouceManager
-									.getInstance()
-									.getImageFromResource(
-											daFlie[1],
-											"default_wallpaper.jpg",
-											ThemeResouceManager.THEME_TYPE_WALLPAPER,
-											ThemeResouceManager.THEME_PATH_UPLOADER
-													+ daFlie[0] + "/");
-							if (bmp != null) {
-								wallpaperManager.setBitmap(bmp);
-							}
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-
-						ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-						activityManager
-								.killBackgroundProcesses("com.auratech.launcher");
-
-						Intent intent = new Intent(Intent.ACTION_MAIN);
-						intent.addCategory(Intent.CATEGORY_HOME);
-						intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-						startActivity(intent);
-
-						android.os.Process.killProcess(android.os.Process
-								.myPid());
-					}
-				}
+				applyTheme();
+			}
+		});
+		
+		mDelete.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+//				File file  = new File(mThemeDownloadTempPath);
+//				if (file.exists()) {
+//					file.delete();
+//				}
+//				
+//				onBackPressed();
+				
+				deleteTheme();
+			}
+		});
+		
+		mDownload.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				bnp.setVisibility(View.VISIBLE);
+				download();
 			}
 		});
 
@@ -391,10 +336,8 @@ public class ThemeOnlineDetailActivity extends Activity implements
 			imageview.setBorderWidth(2);
 
 			imageview.setLayoutParams(new LayoutParams(194, 342));
-			String urlStr = ServerConfig.SERVER_URL + "/" + previewsList.get(position);
-			mVolleyImageLoader.showImage(imageview, urlStr);
-			
-//			mBitmapUtils.display(imageview, urlStr);
+			String urlStr = HttpConfig.SERVER_URL + "/" + previewsList.get(position);
+			mBitmapUtils.display(imageview, urlStr);
 			
 			container.addView(imageview);
 			return imageview;
@@ -405,6 +348,7 @@ public class ThemeOnlineDetailActivity extends Activity implements
 		}
 	};
 
+
 	@Override
 	public void onProgressChange(int current, int max) {
 		if (current == max) {
@@ -413,4 +357,192 @@ public class ThemeOnlineDetailActivity extends Activity implements
 		}
 	}
 
+	private void initDialog() {
+		if (mDialog == null) {
+			mDialog = new AlertDialog.Builder(this).create();
+			mDialog.setCancelable(false);
+			
+			//正在配置主题包的dialog view
+			mApplyingLayout = View.inflate(getApplicationContext(), R.layout.theme_dialog_layout, null);
+			mContent = (TextView) mApplyingLayout.findViewById(R.id.id_textView);
+			mProgressBar = (NumberProgressBar) mApplyingLayout.findViewById(R.id.id_progressBar);
+			
+			//是否要重启系统的dialog view
+			mRebootLayout = View.inflate(getApplicationContext(), R.layout.theme_dialog_reboot_layout, null);
+			TextView no = (TextView) mRebootLayout.findViewById(R.id.id_no);
+			TextView yes = (TextView) mRebootLayout.findViewById(R.id.id_yes);
+			no.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					mDialog.dismiss();
+					//启动launcher
+					Intent intent = new Intent(Intent.ACTION_MAIN);  
+					intent.addCategory(Intent.CATEGORY_HOME);  
+					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  
+					startActivity(intent); 
+					//结束自己的进程
+					android.os.Process.killProcess(android.os.Process.myPid());
+				}
+			});
+			yes.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					//重启
+					PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+					powerManager.reboot("");
+				}
+			});
+			
+			
+			mDeleteLayout = View.inflate(getApplicationContext(), R.layout.theme_dialog_delete_layout, null);
+			TextView cancel = (TextView) mDeleteLayout.findViewById(R.id.id_no);
+			TextView ok = (TextView) mDeleteLayout.findViewById(R.id.id_yes);
+			cancel.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					mDialog.dismiss();
+				}
+			});
+			ok.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					//删除指定的主题包
+					File file  = new File(mThemeDownloadTempPath);
+					if (file.exists()) {
+						file.delete();
+					}
+					
+					onBackPressed();
+				}
+			});
+		}
+	}
+
+	private void updateTheme() {
+		File sourceFile = new File(mThemeDownloadTempPath);
+		
+		if (!sourceFile.exists()) {
+//			Toast.makeText(getApplicationContext(), "本主题不存在，请检查sdcard", Toast.LENGTH_SHORT).show();
+			return ;
+		}
+		mProgressBar.setProgress(10);
+		
+		File dirFile = new File(ThemeResouceManager.THEME_USED_PATH);
+		if (!dirFile.exists()) {
+			dirFile.mkdirs();
+		}
+		dirFile.setReadable(true, false);
+		dirFile.setExecutable(true, false);
+		//将/data/system/theme目录下的文件删除
+		ThemeResouceManager.getInstance().deleteDirFile(dirFile);
+		
+		mProgressBar.setProgress(20);
+		
+		
+		File destFile = new File(dirFile, ThemeResouceManager.THEME_USED_NAME);
+		//将源文件主题包拷贝到/data/system/theme目录下
+		try {
+			FileCopyManager.copyFile(sourceFile, destFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		destFile.setReadable(true, false);
+		destFile.setExecutable(true, false);
+		
+		mProgressBar.setProgress(40);
+		//解压主题包到当前路径
+		ThemeResouceManager.getInstance().unZip(ThemeResouceManager.THEME_USED_ABSOLUTE_PATH, ThemeResouceManager.THEME_USED_PATH);
+		
+		mProgressBar.setProgress(60);
+		
+		//设置声音特效，铃声，通知声，来电声
+		ThemeResouceManager.getInstance().setDefalutSound(getApplicationContext());
+		
+		PreferencesManager.getInstance(getApplicationContext()).setThemeKey(mThemeDownloadTempPath);
+		//设置墙纸
+		WallpaperManager wallpaperManager = WallpaperManager.getInstance(getApplicationContext());
+		try {
+			Bitmap bmp = ThemeResouceManager.getInstance().getImageFromResource(ThemeResouceManager.getInstance().getThemeFileName(themBean.getThemefile()),"default_wallpaper.jpg", ThemeResouceManager.THEME_TYPE_WALLPAPER, ThemeResouceManager.THEME_PATH, new ThemeImageOptions(1024, 600));
+			if (bmp != null) {
+				wallpaperManager.setBitmap(bmp);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		mProgressBar.setProgress(80);
+		
+		//结束launcher进程
+		ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+		activityManager.killBackgroundProcesses("com.auratech.launcher");
+		
+		
+		mProgressBar.setProgress(100);
+		
+		boolean fontsExist = ThemeResouceManager.getInstance().isExist(mThemeDownloadTempPath, "fonts/Roboto-Regular.ttf");
+		boolean effectExist = ThemeResouceManager.getInstance().isExist(mThemeDownloadTempPath, "audio/ui/Effect_Tick.ogg");
+		boolean lockExist = ThemeResouceManager.getInstance().isExist(mThemeDownloadTempPath, "audio/ui/Lock.ogg");
+		boolean unLockExist = ThemeResouceManager.getInstance().isExist(mThemeDownloadTempPath, "audio/ui/Unlock.ogg");
+		Log.d("TAG", "onClick:"+fontsExist+",effectExist:"+effectExist+",lockExist:"+lockExist+",unLockExist:"+unLockExist);
+		
+		//假如主题包中存在 字体，触摸，开屏，锁屏音效就弹出一个显示是否重启的对话框
+		if (fontsExist || effectExist || lockExist || unLockExist) {
+			runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					mDialog.setContentView(mRebootLayout);
+				}
+			});
+			
+		} else {
+			//启动launcher
+			Intent intent = new Intent(Intent.ACTION_MAIN);  
+			intent.addCategory(Intent.CATEGORY_HOME);  
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  
+			startActivity(intent); 
+			//重启
+//			PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+//			powerManager.reboot("");
+			//结束自己的进程
+			android.os.Process.killProcess(android.os.Process.myPid());
+		}
+	}
+
+	private void applyTheme() {
+		mDialog.show();
+		
+		Window window = mDialog.getWindow();
+		window.setContentView(mApplyingLayout);
+		WindowManager.LayoutParams layoutParams = mDialog.getWindow().getAttributes();
+		layoutParams.gravity = Gravity.BOTTOM;
+		layoutParams.width = 600;
+		layoutParams.height = 240;
+		mDialog.getWindow().setAttributes(layoutParams);
+		
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				updateTheme();
+			}
+		}).start();
+	}
+	
+	private void deleteTheme() {
+		mDialog.show();
+		
+		Window window = mDialog.getWindow();
+		window.setContentView(mDeleteLayout);
+		WindowManager.LayoutParams layoutParams = mDialog.getWindow().getAttributes();
+		layoutParams.gravity = Gravity.BOTTOM;
+		layoutParams.width = 600;
+		layoutParams.height = 240;
+		mDialog.getWindow().setAttributes(layoutParams);
+	}
+	
 }

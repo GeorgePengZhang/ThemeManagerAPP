@@ -11,11 +11,10 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 
 import com.auratech.theme.R;
+import com.auratech.theme.bean.DescriptionBean;
 import com.auratech.theme.utils.CircleImageView;
-import com.auratech.theme.utils.DescriptionBean;
 import com.auratech.theme.utils.PreferencesManager;
 import com.auratech.theme.utils.ThemeImageLoader;
 import com.auratech.theme.utils.ThemeResouceManager;
@@ -52,15 +51,11 @@ public class ThemePreviewViewAdapter extends BaseAdapter {
 		ViewHolder ih = null;
 
 		if (convertView == null) {
-			convertView = LayoutInflater.from(mContext).inflate(
-					R.layout.theme_preview_item, null);
-			convertView.setLayoutParams(new AbsListView.LayoutParams(
-					AbsListView.LayoutParams.MATCH_PARENT, 344));
+			convertView = LayoutInflater.from(mContext).inflate(R.layout.theme_preview_item, null);
+			convertView.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, 344));
 
-			CircleImageView imageView = (CircleImageView) convertView
-					.findViewById(R.id.id_image);
-			ImageView selected = (ImageView) convertView
-					.findViewById(R.id.id_selected);
+			CircleImageView imageView = (CircleImageView) convertView.findViewById(R.id.id_image);
+			ImageView selected = (ImageView) convertView.findViewById(R.id.id_selected);
 
 			ih = new ViewHolder();
 			ih.imageView = (ImageView) imageView;
@@ -87,14 +82,6 @@ public class ThemePreviewViewAdapter extends BaseAdapter {
 		} else {
 			ih.imageView.setImageResource(R.drawable.theme_preview_icon_default);
 		}
-
-		// ThemeImageOptions options = new ThemeImageOptions();
-		// options.width = 200;
-		// options.height = 200;
-		// options.imageView = ih.imageView;
-		//
-		// ThemeImageLoader.getInstance().loadImage(themePath, themeResource,
-		// options);
 
 		String themeKey = mPreferencesManager.getThemeKey();
 

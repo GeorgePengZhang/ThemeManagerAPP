@@ -313,8 +313,10 @@ public class IconCache {
                 String themeKey = LauncherAppState.getInstance().getThemeKey();
                 
                 if (!TextUtils.isEmpty(themeKey)) {
-                	bmp = ThemeResouceManager.getInstance().getImageResourceFromARZ(themeKey, info.activityInfo.name+".png", ThemeResouceManager.THEME_TYPE_ICONS, new ThemeImageOptions(72, 72));
-                	Log.d(TAG, "cacheLocked:"+themeKey+",packageName:"+info.activityInfo.name);
+//                	bmp = ThemeResouceManager.getInstance().getImageResourceFromARZ(themeKey, info.activityInfo.name+".png", ThemeResouceManager.THEME_TYPE_ICONS, new ThemeImageOptions(72, 72));
+                	bmp = ThemeResouceManager.getInstance().getImageResourceFromPath(themeKey, info.activityInfo.name+".png", ThemeResouceManager.THEME_TYPE_ICONS, new ThemeImageOptions(72, 72));
+                	
+                	Log.d(TAG, "cacheLocked:"+themeKey+",packageName:"+info.activityInfo.name+",:"+themeKey.substring(0, themeKey.lastIndexOf("/")));
                 }
                 
                 if (bmp == null) {

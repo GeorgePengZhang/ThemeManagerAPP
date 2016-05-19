@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,11 +105,9 @@ public class ThemeImportViewAdapter extends BaseAdapter {
 		if (!directory) {
 			viewHolder.mSelectedImage.setVisibility(View.VISIBLE);
 			if (path.equals(mSelectedFile)) {
-				viewHolder.mSelectedImage
-						.setImageResource(R.drawable.theme_selected_yes);
+				viewHolder.mSelectedImage.setImageResource(R.drawable.theme_selected_yes);
 			} else {
-				viewHolder.mSelectedImage
-						.setImageResource(R.drawable.theme_selected_no);
+				viewHolder.mSelectedImage.setImageResource(R.drawable.theme_selected_no);
 			}
 		} else {
 			viewHolder.mSelectedImage.setVisibility(View.INVISIBLE);

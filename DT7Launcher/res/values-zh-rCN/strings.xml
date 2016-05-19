@@ -108,4 +108,13 @@
     <string name="wallpaper_button_text" msgid="8404103075899945851">"壁纸"</string>
     <string name="settings_button_text" msgid="8119458837558863227">"设置"</string>
     
+    <string name="themes">"主题"</string>
+    <string name="pageanim_normal">"经典"</string>
+    <string name="pageanim_turntable">"转盘"</string>
+    <string name="pageanim_layered">"层叠"</string>
+    <string name="pageanim_rotate">"旋转"</string>
+    <string name="pageanim_pageturn">"翻页"</string>
+    <string name="pageanim_rotatebylefttoppoint" >"卡片"</string>
+    <string name="pageanim_rotatebycenterpoint" >"罗盘"</string>
+    <string name="pageanim_blocks" >"方块"</string>
 </resources>

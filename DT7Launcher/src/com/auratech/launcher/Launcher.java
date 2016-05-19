@@ -114,9 +114,6 @@ import android.widget.Toast;
 
 import com.auratech.launcher.DropTarget.DragObject;
 import com.auratech.launcher.pageanim.PageViewAnimation;
-import com.auratech.theme.ThemePreviewActivity;
-import com.auratech.theme.utils.DescriptionBean;
-import com.auratech.theme.utils.PreferencesManager;
 import com.auratech.theme.utils.ThemeImageLoader.ThemeImageOptions;
 import com.auratech.theme.utils.ThemeResouceManager;
 
@@ -2364,7 +2361,7 @@ public class Launcher extends Activity
     }
 
     protected ComponentName getThemeComponent() {
-        return new ComponentName(getPackageName(), ThemePreviewActivity.class.getName());
+        return new ComponentName("com.auratech.theme", "com.auratech.theme.ThemePreviewActivity");
     }
 
     /**

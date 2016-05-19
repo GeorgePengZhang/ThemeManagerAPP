@@ -263,6 +263,15 @@ s -->
     <!-- Text for settings button -->
     <string name="settings_button_text">Settings</string>
     
+    <string name="themes">"Themes"</string>
+    <string name="pageanim_normal">"Classic"</string>
+    <string name="pageanim_turntable">"Windmill"</string>
+    <string name="pageanim_layered">"Cascade"</string>
+    <string name="pageanim_rotate">"Rotate"</string>
+    <string name="pageanim_pageturn">"Page"</string>
+    <string name="pageanim_rotatebylefttoppoint">"Card"</string>
+    <string name="pageanim_rotatebycenterpoint">"Compass"</string>
+    <string name="pageanim_blocks">"Box"</string>
     
     
 </resources>

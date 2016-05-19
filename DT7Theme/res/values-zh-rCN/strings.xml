@@ -29,21 +29,27 @@
     <string name="pageanim_rotatebycenterpoint" >"罗盘"</string>
     <string name="pageanim_blocks" >"方块"</string>
     <string name="theme_import">"导入"</string>
-    <string name="theme_download">"下载"</string>
     <string name="theme_local">"本地"</string>
     <string name="theme_online">"在线"</string>
     <string name="theme_apply">"应用"</string>
     <string name="theme_importlocalthemes">"本地主题导入"</string>
     <string name="theme_ok">"确定"</string>
     <string name="theme_cancel">"取消"</string>
-    <string name="theme_importingtheme">"导入中..."</string>
+    <string name="theme_importingtheme">"导入中"</string>
     <string name="theme_nofiles">"没有文件"</string>
     <string name="theme_no">"暂无主题"</string>
     <string name="theme_network_connection">"正在连接..."</string>
-    <string name="theme_downloading">"正在下载"</string>
-    <string name="theme_is_downloading">"下载"</string>
+    <string name="theme_waiting">"等待下载"</string>
+    <string name="theme_download">"下载"</string>
+    <string name="theme_downloading">"下载中"</string>
     <string name="theme_application">"应用"</string>
     <string name="theme_prompt">"本主题不存在，请检查sdcard"</string>
-    
-    
+    <string name="theme_delete">删除</string>
+    <string name="theme_applying">正在配置中</string>
+    <string name="theme_reboot_hint">您即将使用的主题包将会使用到新的字体、触摸铃声、开屏铃声或者锁屏铃声需要重启系统才能生效。</string>
+    <string name="theme_reboot">重启</string>
+    <string name="theme_YES">是</string>
+    <string name="theme_NO">否</string>
+    <string name="theme_delete_hint">确认要删除该资源吗？</string>
+	
 </resources>

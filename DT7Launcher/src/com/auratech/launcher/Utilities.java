@@ -204,7 +204,10 @@ public final class Utilities {
             	if (mIconBgBitmap == null) {
 //            		String theme = PreferencesManager.getInstance(context).getThemeKey();
             		String themeKey = LauncherAppState.getInstance().getThemeKey();
-            		mIconBgBitmap = ThemeResouceManager.getInstance().getImageResourceFromARZ(themeKey, "icon_background.png", ThemeResouceManager.THEME_TYPE_ICONS, new ThemeImageOptions(sIconTextureWidth, sIconTextureHeight));
+//            		mIconBgBitmap = ThemeResouceManager.getInstance().getImageResourceFromARZ(themeKey, "icon_background.png", ThemeResouceManager.THEME_TYPE_ICONS, new ThemeImageOptions(sIconTextureWidth, sIconTextureHeight));
+            	
+            		mIconBgBitmap = ThemeResouceManager.getInstance().getImageResourceFromPath(themeKey, "icon_background.png", ThemeResouceManager.THEME_TYPE_ICONS, new ThemeImageOptions(sIconTextureWidth, sIconTextureHeight));
+                    
             	}
                 	
             	if (mIconBgBitmap != null) {
@@ -258,7 +261,8 @@ public final class Utilities {
             	iconPadBottom = 0;
             }
             
-            Log.d(TAG, "createIconBitmap iconPadLeft:"+iconPadLeft+",iconPadTop:"+iconPadTop+",iconPadRight:"+iconPadRight+",iconPadBottom:"+iconPadBottom);
+//            Log.d(TAG, "createIconBitmap iconPadLeft:"+iconPadLeft+",iconPadTop:"+iconPadTop+",iconPadRight:"+iconPadRight+",iconPadBottom:"+iconPadBottom);
+//            Log.d(TAG, "createIconBitmap left:"+left+",top:"+top+",width:"+width+",height:"+height);
             
             sOldBounds.set(icon.getBounds());
             icon.setBounds(left+iconPadLeft, top+iconPadTop, left+width-iconPadRight, top+height-iconPadBottom);

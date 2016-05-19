@@ -6,7 +6,6 @@ import com.lidroid.xutils.BitmapUtils;
 /**
  * Author: wyouflf
  * Date: 13-11-12
- * Time: ä¸Šåˆ10:24
  */
 public class BitmapHelp {
     private BitmapHelp() {
@@ -15,7 +14,7 @@ public class BitmapHelp {
     private static BitmapUtils bitmapUtils;
 
     /**
-     * BitmapUtilsä¸æ˜¯å•ä¾‹çš?æ ¹æ®éœ?¦é‡è½½å¤šä¸ªè·å–å®ä¾‹çš„æ–¹æ³?     *
+     * BitmapUtils2?¨º?¦Ì£¤¨¤y¦Ì? ?¨´?YD¨¨¨°a?????¨¤????¨¨?¨º¦Ì¨¤y¦Ì?¡¤?¡¤¡§
      * @param appContext application context
      * @return
      */

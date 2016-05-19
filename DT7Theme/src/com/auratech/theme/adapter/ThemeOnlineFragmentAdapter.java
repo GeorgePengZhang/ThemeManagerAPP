@@ -3,31 +3,41 @@ package com.auratech.theme.adapter;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.auratech.theme.R;
-import com.auratech.theme.bean.ThemeModel;
-import com.auratech.theme.executor.ServerConfig;
+import com.auratech.theme.bean.ThemeInfoBean;
+import com.auratech.theme.utils.BitmapHelp;
 import com.auratech.theme.utils.CircleImageView;
+import com.auratech.theme.utils.HttpConfig;
 import com.auratech.theme.utils.PreferencesManager;
-import com.auratech.theme.utils.VolleyImageLoader;
+import com.auratech.theme.utils.ThemeResouceManager;
+import com.lidroid.xutils.BitmapUtils;
 
 public class ThemeOnlineFragmentAdapter extends BaseAdapter {
 
 	private PreferencesManager mPreferencesManager;
-	private List<ThemeModel> mList;
+	private List<ThemeInfoBean> mList;
 	private Context mContext;
-	private VolleyImageLoader mVolleyImageLoader;
-	public ThemeOnlineFragmentAdapter(Context context, List<ThemeModel> list) {
+	private BitmapUtils mBitmapUtils;
+	public ThemeOnlineFragmentAdapter(Context context, List<ThemeInfoBean> list) {
 		mContext = context;
 		mList = list;
+		
 		mPreferencesManager = PreferencesManager.getInstance(context);
-		mVolleyImageLoader = VolleyImageLoader.getImageLoader(context);
+		
+		mBitmapUtils = BitmapHelp.getBitmapUtils(context.getApplicationContext());
+		mBitmapUtils.configDefaultLoadingImage(R.drawable.theme_preview_icon_default);
+		mBitmapUtils.configDefaultLoadFailedImage(R.drawable.theme_preview_icon_default);
+		mBitmapUtils.configDefaultBitmapConfig(Bitmap.Config.RGB_565);
 	}
 	
 	@Override
@@ -36,7 +46,7 @@ public class ThemeOnlineFragmentAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public ThemeModel getItem(int position) {
+	public ThemeInfoBean getItem(int position) {
 		return mList.get(position);
 	}
 
@@ -50,15 +60,11 @@ public class ThemeOnlineFragmentAdapter extends BaseAdapter {
 		ViewHolder ih = null;
 
 		if (convertView == null) {
-			convertView = LayoutInflater.from(mContext).inflate(
-					R.layout.theme_preview_item, null);
-			convertView.setLayoutParams(new AbsListView.LayoutParams(
-					AbsListView.LayoutParams.MATCH_PARENT, 344));
+			convertView = LayoutInflater.from(mContext).inflate(R.layout.theme_preview_item, null);
+			convertView.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, 344));
 
-			CircleImageView imageView = (CircleImageView) convertView
-					.findViewById(R.id.id_image);
-			ImageView selected = (ImageView) convertView
-					.findViewById(R.id.id_selected);
+			CircleImageView imageView = (CircleImageView) convertView.findViewById(R.id.id_image);
+			ImageView selected = (ImageView) convertView.findViewById(R.id.id_selected);
 
 			ih = new ViewHolder();
 			ih.imageView = (ImageView) imageView;
@@ -70,15 +76,21 @@ public class ThemeOnlineFragmentAdapter extends BaseAdapter {
 			ih = (ViewHolder) convertView.getTag();
 		}
 
-		ThemeModel bean = getItem(position);
-		String urlStr = ServerConfig.SERVER_URL+"/"+bean.getThumbnails() ;
-		mVolleyImageLoader.showImage(ih.imageView, urlStr);
-//
-//		if (themePath.equals(themeKey)) {
-//			ih.imageSelected.setImageResource(R.drawable.theme_using_flag);
-//		} else {
-//			ih.imageSelected.setImageDrawable(null);
-//		}
+		ThemeInfoBean bean = getItem(position);
+		String urlStr = HttpConfig.SERVER_URL+"/"+bean.getThumbnails();
+		mBitmapUtils.display(ih.imageView, urlStr);
+		
+		String themeFileName = ThemeResouceManager.getInstance().getThemeFileName(bean.getThemefile());
+		String themeKey = mPreferencesManager.getThemeKey();
+
+		Log.d("TAG", "getView:"+themeFileName+",themeKey:"+themeKey);
+		
+		
+		if (themeKey.equals(ThemeResouceManager.THEME_PATH+themeFileName)) {
+			ih.imageSelected.setImageResource(R.drawable.theme_using_flag);
+		} else {
+			ih.imageSelected.setImageDrawable(null);
+		}
 
 		return convertView;
 	}

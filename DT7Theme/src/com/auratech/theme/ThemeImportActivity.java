@@ -9,15 +9,19 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.storage.StorageManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Gravity;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.WindowManager.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
@@ -70,33 +74,57 @@ public class ThemeImportActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				String selected = mAdapter.getSelected();
+				final String selected = mAdapter.getSelected();
 
 				// 将选中arz文件 拷贝到theme/.data/目录下
 				if (!TextUtils.isEmpty(selected)) {
-					mSure.setText(R.string.theme_importingtheme);
 					mSure.setEnabled(false);
 					mCancel.setEnabled(false);
+					
+					
+					final AlertDialog dialog = new AlertDialog.Builder(ThemeImportActivity.this).create();
+					dialog.setCancelable(false);
+					dialog.show();
+					
+					Window window = dialog.getWindow();
+					window.setContentView(R.layout.theme_dialog_import_layout);
+					WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+					layoutParams.gravity = Gravity.BOTTOM;
+					layoutParams.width = 600;
+					layoutParams.height = 150;
+					dialog.getWindow().setAttributes(layoutParams);
+					
+					new Thread(new Runnable() {
+						
+						@Override
+						public void run() {
+							File sourceFile = new File(selected);
 
-					File sourceFile = new File(selected);
+							String fileName = sourceFile.getName();
+							File dirPath = ThemeResouceManager.getInstance().getThemeDatePath();
+							File destFile = new File(dirPath, fileName);
 
-					String fileName = sourceFile.getName();
-					File dirPath = ThemeResouceManager.getInstance()
-							.getThemeDatePath();
-					File destFile = new File(dirPath, fileName);
+							try {
+								FileCopyManager.copyFile(sourceFile, destFile);
+								sourceFile.delete();
+							} catch (IOException e) {
+								e.printStackTrace();
 
-					try {
-						FileCopyManager.copyFile(sourceFile, destFile);
-						sourceFile.delete();
-					} catch (IOException e) {
-						e.printStackTrace();
-
-						if (destFile.exists()) {
-							destFile.delete();
+								if (destFile.exists()) {
+									destFile.delete();
+								}
+							}
+							
+							runOnUiThread(new Runnable() {
+								
+								@Override
+								public void run() {
+									dialog.dismiss();
+									onBackPressed();
+								}
+							});
 						}
-					}
-
-					onBackPressed();
+					}).start();
 				}
 			}
 		});
@@ -227,8 +255,7 @@ public class ThemeImportActivity extends Activity {
 						if (pathname.isDirectory()) {
 							return !startsWith;
 						} else {
-							return name.toLowerCase(Locale.getDefault())
-									.endsWith(".arz");
+							return name.toLowerCase(Locale.getDefault()).endsWith(".arz");
 						}
 					}
 				});

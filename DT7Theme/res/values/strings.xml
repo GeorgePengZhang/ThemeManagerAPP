@@ -2,32 +2,36 @@
 <resources>
 
     <string name="app_name">DT7_ThemeAPP</string>
-
     <string name="themes">"Themes"</string>
     <string name="pageanim_normal">"Classic"</string>
     <string name="pageanim_turntable">"Windmill"</string>
     <string name="pageanim_layered">"Cascade"</string>
     <string name="pageanim_rotate">"Rotate"</string>
     <string name="pageanim_pageturn">"Page"</string>
-    <string name="pageanim_rotatebylefttoppoint" >"Card"</string>
-    <string name="pageanim_rotatebycenterpoint" >"Compass"</string>
-    <string name="pageanim_blocks" >"Box"</string>
+    <string name="pageanim_rotatebylefttoppoint">"Card"</string>
+    <string name="pageanim_rotatebycenterpoint">"Compass"</string>
+    <string name="pageanim_blocks">"Box"</string>
     <string name="theme_import">"Import"</string>
-    <string name="theme_download">"Download"</string>
     <string name="theme_local">"Local"</string>
     <string name="theme_online">"Online"</string>
     <string name="theme_apply">"Apply"</string>
     <string name="theme_importlocalthemes">"Import local themes"</string>
     <string name="theme_ok">"OK"</string>
     <string name="theme_cancel">"Cancel"</string>
-    <string name="theme_importingtheme">"Importing theme"</string>
+    <string name="theme_importingtheme">"Importing"</string>
     <string name="theme_nofiles">"No files"</string>
     <string name="theme_no">"No theme"</string>
     <string name="theme_network_connection">"The network connection..."</string>
-    <string name="theme_downloading">"Is downloading"</string>
-     <string name="theme_is_downloading">"downloading"</string>
-     <string name="theme_application">"Apply"</string>
-     <string name="theme_prompt">"Theme does not exist, please check the sdcard"</string>
-    
-    
+    <string name="theme_waiting">"Waiting"</string>
+    <string name="theme_download">"Download"</string>
+    <string name="theme_downloading">"Downloading"</string>
+    <string name="theme_application">"Apply"</string>
+    <string name="theme_prompt">"Theme does not exist, please check the sdcard"</string>
+    <string name="theme_delete">Delete</string>
+    <string name="theme_applying">Applying</string>
+    <string name="theme_reboot_hint">Reboot to apply this theme\'s font and ringtones of touch and lock/unlock screen.</string>
+    <string name="theme_reboot">Reboot</string>
+    <string name="theme_YES">Yes</string>
+    <string name="theme_NO">No</string>
+	<string name="theme_delete_hint">Delete these resources?</string>
 </resources>

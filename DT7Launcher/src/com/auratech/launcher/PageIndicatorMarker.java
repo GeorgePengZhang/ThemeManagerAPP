@@ -18,11 +18,13 @@ package com.auratech.launcher;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.auratech.launcher.R;
+import com.auratech.theme.utils.ThemeImageLoader.ThemeImageOptions;
+import com.auratech.theme.utils.ThemeResouceManager;
 
 public class PageIndicatorMarker extends FrameLayout {
     @SuppressWarnings("unused")
@@ -33,6 +35,10 @@ public class PageIndicatorMarker extends FrameLayout {
     private ImageView mActiveMarker;
     private ImageView mInactiveMarker;
     private boolean mIsActive = false;
+    
+    
+    private Bitmap mActiveBitmap;
+    private Bitmap mInactiveBitmap;
 
     public PageIndicatorMarker(Context context) {
         this(context, null);
@@ -53,8 +59,30 @@ public class PageIndicatorMarker extends FrameLayout {
 
     void setMarkerDrawables(int activeResId, int inactiveResId) {
         Resources r = getResources();
-        mActiveMarker.setImageDrawable(r.getDrawable(activeResId));
-        mInactiveMarker.setImageDrawable(r.getDrawable(inactiveResId));
+        
+        String themeKey = LauncherAppState.getInstance().getThemeKey();
+        
+        if (mActiveBitmap == null) {
+        	mActiveBitmap = ThemeResouceManager.getInstance().getImageResourceFromPath(themeKey, "ic_pageindicator_current.png", ThemeResouceManager.THEME_TYPE_ICONS, new ThemeImageOptions(28, 26));
+        }
+        
+        if (mInactiveBitmap == null) {
+        	mInactiveBitmap = ThemeResouceManager.getInstance().getImageResourceFromPath(themeKey, "ic_pageindicator_default.png", ThemeResouceManager.THEME_TYPE_ICONS, new ThemeImageOptions(28, 26));
+        }
+        
+//        Log.d("TAG", "setMarkerDrawables:"+mActiveBitmap+",mInactiveBitmap:"+mInactiveBitmap);
+        if (mActiveBitmap != null) {
+        	mActiveMarker.setImageBitmap(mActiveBitmap);
+        } else {
+        	mActiveMarker.setImageDrawable(r.getDrawable(activeResId));
+        }
+
+        
+        if (mInactiveBitmap != null) {
+        	mInactiveMarker.setImageBitmap(mInactiveBitmap);
+        } else {
+        	mInactiveMarker.setImageDrawable(r.getDrawable(inactiveResId));
+        }
     }
 
     void activate(boolean immediate) {

@@ -161,28 +161,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.auratech.theme.ThemePreviewActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/MyTheme" >
-        </activity>
-        <activity
-            android:name="com.auratech.theme.ThemeDetailActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/MyTheme" >
-        </activity>
-        <activity
-            android:name="com.auratech.theme.ThemeImportActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/MyTheme" >
-        </activity>
-
-        <activity
-            android:name="com.auratech.theme.ThemeOnlineDetailActivity"
-            android:screenOrientation="portrait" 
-            android:theme="@style/MyTheme">
-        </activity>
-        
         <service
             android:name="com.auratech.launcher.MemoryTracker"
             android:enabled="@bool/debug_memory_enabled" >

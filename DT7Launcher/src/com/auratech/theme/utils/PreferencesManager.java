@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.text.TextUtils;
+import android.util.Log;
 
 public class PreferencesManager {
 	
@@ -47,6 +48,7 @@ public class PreferencesManager {
 		}
 		
 		String themekey = mSharedPreferences.getString(THEME_KEY, "");
+		Log.d("XXX", "getThemeKey:"+themekey+",mSharedPreferences:"+mSharedPreferences);
 		if (TextUtils.isEmpty(themekey)) {
 			themekey = ThemeResouceManager.THEME_DEAFULT_ABSOLUTE_PATH;
 		}
@@ -56,6 +58,8 @@ public class PreferencesManager {
 	
 	public void setThemeKey(String theme) {
 		if (mSharedPreferences != null) {
+			
+			Log.d("XXX", "setThemeKey:"+theme+",mSharedPreferences:"+mSharedPreferences);
 			Editor editor = mSharedPreferences.edit();
 			editor.putString(THEME_KEY, theme);
 			editor.apply();

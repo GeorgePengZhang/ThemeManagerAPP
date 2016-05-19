@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.auratech.theme.fragment.ThemeLocalFragment;
 import com.auratech.theme.fragment.ThemeOnlineFragment;
-import com.auratech.theme.utils.PreferencesManager;
 import com.auratech.theme.utils.ThemeImageLoader;
 
 public class ThemePreviewActivity extends FragmentActivity {

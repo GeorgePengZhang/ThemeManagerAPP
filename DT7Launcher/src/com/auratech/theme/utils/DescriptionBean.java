@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.auratech.theme.utils.ThemeResouceManager;
+
 /**
  * @author steven Zhang
  */

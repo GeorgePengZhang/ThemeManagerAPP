@@ -22,8 +22,8 @@ import com.auratech.theme.R;
 import com.auratech.theme.ThemeDetailActivity;
 import com.auratech.theme.ThemeImportActivity;
 import com.auratech.theme.adapter.ThemePreviewViewAdapter;
+import com.auratech.theme.bean.DescriptionBean;
 import com.auratech.theme.utils.CircleImageView;
-import com.auratech.theme.utils.DescriptionBean;
 import com.auratech.theme.utils.ThemeImageLoader;
 import com.auratech.theme.utils.ThemeImageLoader.ThemeImageOptions;
 import com.auratech.theme.utils.ThemeResouceManager;
@@ -111,18 +111,6 @@ public class ThemeLocalFragment extends Fragment {
 		super.onResume();
 		
 		mFirstLoaded = true;
-//		String[] themeTotal = ThemeResouceManager.getInstance().getAllLocalTheme();
-//		mList.clear();
-//		if (themeTotal != null) {
-//			for (String theme:themeTotal) {
-//				DescriptionBean bean = ThemeResouceManager.getInstance().parseDescription(theme);
-//				if (bean != null) {
-//					mList.add(bean);
-//				}
-//			}
-//		}
-//		
-//		mAdapter.notifyDataSetChanged();
 		mTask = new LoadedDescription(mList, mAdapter);
 		mTask.execute();
 	}

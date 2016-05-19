@@ -168,8 +168,9 @@ public class FolderIcon extends FrameLayout implements FolderListener {
         if (mIconBgBitmap == null) {
 //        	String theme = Launcher.mThemeKey;
         	String themeKey = LauncherAppState.getInstance().getThemeKey();
-    		mIconBgBitmap = ThemeResouceManager.getInstance().getImageResourceFromARZ(themeKey, "icon_folder.png", ThemeResouceManager.THEME_TYPE_ICONS, new ThemeImageOptions(lp.width, lp.height));
-    	}
+    		mIconBgBitmap = ThemeResouceManager.getInstance().getImageResourceFromPath(themeKey, "icon_folder.png", ThemeResouceManager.THEME_TYPE_ICONS, new ThemeImageOptions(lp.width, lp.height));
+    		  
+        }
         
         if (mIconBgBitmap != null) {
         	icon.mPreviewBackground.setImageBitmap(mIconBgBitmap);

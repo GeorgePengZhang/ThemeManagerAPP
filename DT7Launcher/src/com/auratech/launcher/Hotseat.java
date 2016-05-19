@@ -22,8 +22,11 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.StateListDrawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,7 +35,8 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.auratech.launcher.R;
+import com.auratech.theme.utils.ThemeImageLoader.ThemeImageOptions;
+import com.auratech.theme.utils.ThemeResouceManager;
 
 public class Hotseat extends FrameLayout {
     private static final String TAG = "Hotseat";
@@ -45,6 +49,11 @@ public class Hotseat extends FrameLayout {
 
     private boolean mTransposeLayoutWithOrientation;
     private boolean mIsLandscape;
+
+	private int iconSizePx;
+
+	private Bitmap mAppsBitmapNormal;
+	private Bitmap mAppsBitmapPress;
 
     public Hotseat(Context context) {
         this(context, null);
@@ -116,6 +125,7 @@ public class Hotseat extends FrameLayout {
         // Center the icon
         int cWidth = mContent.getShortcutsAndWidgets().getCellContentWidth();
         int cHeight = mContent.getShortcutsAndWidgets().getCellContentHeight();
+        
         int cellPaddingX = (int) Math.max(0, ((coords.width() - cWidth) / 2f));
         int cellPaddingY = (int) Math.max(0, ((coords.height() - cHeight) / 2f));
         coords.offset(cellPaddingX, cellPaddingY);
@@ -129,6 +139,8 @@ public class Hotseat extends FrameLayout {
         LauncherAppState app = LauncherAppState.getInstance();
         DeviceProfile grid = app.getDynamicGrid().getDeviceProfile();
 
+        iconSizePx = grid.iconSizePx;
+        
         mAllAppsButtonRank = grid.hotseatAllAppsRank;
         mContent = (CellLayout) findViewById(R.id.layout);
         if (grid.isLandscape && !grid.isLargeTablet()) {
@@ -151,8 +163,25 @@ public class Hotseat extends FrameLayout {
             LayoutInflater inflater = LayoutInflater.from(context);
             TextView allAppsButton = (TextView)
                     inflater.inflate(R.layout.all_apps_button, mContent, false);
-            Drawable d = context.getResources().getDrawable(R.drawable.all_apps_button_icon);
+            
+            String themeKey = LauncherAppState.getInstance().getThemeKey();
+            
+            if (mAppsBitmapNormal == null) {
+            	mAppsBitmapNormal = ThemeResouceManager.getInstance().getImageResourceFromARZ(themeKey, "ic_allapps.png", ThemeResouceManager.THEME_TYPE_ICONS, new ThemeImageOptions(83, 83));
+            }
+            
+            if (mAppsBitmapPress == null) {
+            	mAppsBitmapPress = ThemeResouceManager.getInstance().getImageResourceFromARZ(themeKey, "ic_allapps_pressed.png", ThemeResouceManager.THEME_TYPE_ICONS, new ThemeImageOptions(83, 83));
+            }
+            
+            Drawable d = getStateDrable(mAppsBitmapNormal, mAppsBitmapPress);
+            
+            if (d == null) {
+            	d = context.getResources().getDrawable(R.drawable.all_apps_button_icon);
+            }
+            
             Utilities.resizeIconDrawable(d);
+            
             allAppsButton.setCompoundDrawables(null, d, null, null);
 
             allAppsButton.setContentDescription(context.getString(R.string.all_apps_button_label));
@@ -174,6 +203,7 @@ public class Hotseat extends FrameLayout {
             int y = getCellYFromOrder(mAllAppsButtonRank);
             CellLayout.LayoutParams lp = new CellLayout.LayoutParams(x,y,1,1);
             lp.canReorder = false;
+            
             mContent.addViewToCellLayout(allAppsButton, -1, 0, lp, true);
         }
     }
@@ -238,4 +268,26 @@ public class Hotseat extends FrameLayout {
             }
         }
     }
+    
+    private Drawable getStateDrable(Bitmap normal, Bitmap press) {
+    	
+    	if (normal == null || press == null) {
+    		return null;
+    	}
+    	
+    	//初始化一个空对象  
+		StateListDrawable stateListDrawable = new StateListDrawable();  
+		//获取对应的属性值 Android框架自带的属性 attr  
+		int pressed = android.R.attr.state_pressed;  
+		int focused = android.R.attr.state_focused;  
+		  
+		
+		stateListDrawable.addState(new int []{pressed}, new BitmapDrawable(press));  
+		stateListDrawable.addState(new int []{focused}, new BitmapDrawable(press));  
+		//没有任何状态时显示的图片，我们给它设置我空集合  
+		stateListDrawable.addState(new int []{}, new BitmapDrawable(normal));  
+		
+		return stateListDrawable;
+    }
+    
 }

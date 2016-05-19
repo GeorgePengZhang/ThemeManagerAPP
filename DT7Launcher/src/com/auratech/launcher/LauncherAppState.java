@@ -18,12 +18,6 @@ package com.auratech.launcher;
 
 import java.lang.ref.WeakReference;
 
-import com.auratech.launcher.R;
-import com.auratech.launcher.pageanim.PageViewAnimation;
-import com.auratech.theme.utils.DescriptionBean;
-import com.auratech.theme.utils.PreferencesManager;
-import com.auratech.theme.utils.ThemeResouceManager;
-
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.ContentResolver;
@@ -35,6 +29,11 @@ import android.content.res.Resources;
 import android.database.ContentObserver;
 import android.os.Handler;
 import android.util.Log;
+
+import com.auratech.launcher.pageanim.PageViewAnimation;
+import com.auratech.theme.utils.DescriptionBean;
+import com.auratech.theme.utils.PreferencesManager;
+import com.auratech.theme.utils.ThemeResouceManager;
 
 
 public class LauncherAppState implements DeviceProfile.DeviceProfileCallbacks {
