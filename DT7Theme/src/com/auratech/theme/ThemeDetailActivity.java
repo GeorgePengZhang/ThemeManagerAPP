@@ -36,6 +36,7 @@ import com.auratech.theme.utils.CircleImageView;
 import com.auratech.theme.utils.FileCopyManager;
 import com.auratech.theme.utils.PreferencesManager;
 import com.auratech.theme.utils.ThemeImageLoader;
+import com.auratech.theme.utils.ThemeUtils;
 import com.auratech.theme.utils.ThemeImageLoader.ThemeImageOptions;
 import com.auratech.theme.utils.ThemeResouceManager;
 import com.auratech.theme.utils.view.NumberProgressBar;
@@ -336,6 +337,10 @@ public class ThemeDetailActivity extends Activity {
 		
 		
 		mProgressBar.setProgress(100);
+		
+		Intent i = new Intent(ThemeUtils.THEME_SYSTEM_UI_NAVIGATIONBAR_UPDATE);
+		ThemeDetailActivity.this.sendBroadcast(i);
+		
 		
 		boolean fontsExist = ThemeResouceManager.getInstance().isExist(themePath, "fonts/Roboto-Regular.ttf");
 		boolean effectExist = ThemeResouceManager.getInstance().isExist(themePath, "audio/ui/Effect_Tick.ogg");

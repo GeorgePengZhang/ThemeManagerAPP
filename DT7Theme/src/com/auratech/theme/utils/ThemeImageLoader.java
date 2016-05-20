@@ -242,6 +242,8 @@ public class ThemeImageLoader {
 					Bitmap bmp = getBitmapFromCache(key);
 					if (bmp != null) {
 						updateImageView(options, key);
+						mHashSet.remove(key);
+						return ;
 					}
 
 					bmp = getBitmapFromInputStream(zipFilePath, resoucesPathName, options);

@@ -2357,6 +2357,7 @@ public class Launcher extends Activity
     protected void startTheme() {
         final Intent intent = new Intent();
         intent.setComponent(getThemeComponent());
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 

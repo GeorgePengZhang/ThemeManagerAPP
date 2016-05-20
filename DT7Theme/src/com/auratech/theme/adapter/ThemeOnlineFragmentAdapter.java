@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import com.auratech.theme.R;
 import com.auratech.theme.bean.ThemeInfoBean;

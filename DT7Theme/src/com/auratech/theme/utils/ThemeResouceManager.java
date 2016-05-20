@@ -28,7 +28,7 @@ public class ThemeResouceManager {
 	public static final int READ_FILE_SIZE = 4096;
 	public static final String THEME_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "Theme/.data/";
 	
-//	public static final String THEME_PATH_DOWNLOAD = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "Theme/.download/";
+	public static final String THEME_PATH_DOWNLOAD = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "Theme/.download/";
 	public static final String THEME_USED_PATH = "/data/system/theme/";
 //	public static final String THEME_USED_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator+"system/theme";
 	public static final String THEME_USED_NAME = "theme_using.arz";

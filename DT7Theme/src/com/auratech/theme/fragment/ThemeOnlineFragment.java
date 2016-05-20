@@ -106,7 +106,7 @@ public class ThemeOnlineFragment extends Fragment {
 
 			@Override
 			public void onSuccess(ResponseInfo<String> responseInfo) {
-				Log.d("TAG", "onSuccess:"+responseInfo.result);
+//				Log.d("TAG", "onSuccess:"+responseInfo.result);
 				
 				ArrayList<ThemeInfoBean> list = parseThemeInfo(responseInfo.result);
 				if (list.size() > 0) { // 有数据 显示 view

@@ -39,6 +39,7 @@ import com.auratech.theme.utils.FileCopyManager;
 import com.auratech.theme.utils.HttpConfig;
 import com.auratech.theme.utils.PreferencesManager;
 import com.auratech.theme.utils.ThemeResouceManager;
+import com.auratech.theme.utils.ThemeUtils;
 import com.auratech.theme.utils.ThemeImageLoader.ThemeImageOptions;
 import com.auratech.theme.utils.view.NumberProgressBar;
 import com.auratech.theme.utils.view.OnProgressBarListener;
@@ -79,7 +80,7 @@ public class ThemeOnlineDetailActivity extends Activity implements
 	private NumberProgressBar bnp;
 	private BitmapUtils mBitmapUtils;
 	private String mThemeDownloadTempPath = null;
-	
+	private String mThemeDownloadPath = null;
 	
 	private AlertDialog mDialog;
 	private TextView mContent;
@@ -98,7 +99,9 @@ public class ThemeOnlineDetailActivity extends Activity implements
 		themBean = getIntent().getParcelableExtra(THEME_ONLINE);
 		previewsList = getListData(themBean);
 		mClicked = false;
-		mThemeDownloadTempPath = ThemeResouceManager.THEME_PATH + ThemeResouceManager.getInstance().getThemeFileName(themBean.getThemefile());
+		mThemeDownloadPath = ThemeResouceManager.THEME_PATH + ThemeResouceManager.getInstance().getThemeFileName(themBean.getThemefile());
+		mThemeDownloadTempPath = mThemeDownloadPath +".tmp";
+		
 		createDir(mThemeDownloadTempPath);
 		bnp.setOnProgressBarListener(this);
 		
@@ -171,13 +174,15 @@ public class ThemeOnlineDetailActivity extends Activity implements
 						bnp.setProgress(0);
 						mDownload.setEnabled(true);
 						mDownload.setText(getString(R.string.theme_download));
-						Toast.makeText(ThemeOnlineDetailActivity.this, msg, 500).show();
+						Toast.makeText(ThemeOnlineDetailActivity.this, "Download Failed", 500).show();
 					}
 
 					@Override
 					public void onSuccess(ResponseInfo<File> responseInfo) {
-						Toast.makeText(getApplicationContext(),"Download Successful", Toast.LENGTH_SHORT).show();
 						bnp.setProgress(100);
+						File oldFile = new File(mThemeDownloadTempPath);
+						oldFile.renameTo(new File(mThemeDownloadPath));
+						Toast.makeText(getApplicationContext(),"Download Successful", Toast.LENGTH_SHORT).show();
 						mDownload.setEnabled(true);
 						mDownload.setVisibility(View.GONE);
 						mApply.setVisibility(View.VISIBLE);
@@ -192,8 +197,7 @@ public class ThemeOnlineDetailActivity extends Activity implements
 		mDownload = (TextView) findViewById(R.id.id_download);
 		
 		
-		
-		File file = new File(mThemeDownloadTempPath);
+		File file = new File(mThemeDownloadPath);
 		if (file.exists()) {
 			mDownload.setVisibility(View.GONE);
 			mApply.setVisibility(View.VISIBLE);
@@ -220,13 +224,6 @@ public class ThemeOnlineDetailActivity extends Activity implements
 			
 			@Override
 			public void onClick(View v) {
-//				File file  = new File(mThemeDownloadTempPath);
-//				if (file.exists()) {
-//					file.delete();
-//				}
-//				
-//				onBackPressed();
-				
 				deleteTheme();
 			}
 		});
@@ -411,7 +408,7 @@ public class ThemeOnlineDetailActivity extends Activity implements
 				@Override
 				public void onClick(View v) {
 					//删除指定的主题包
-					File file  = new File(mThemeDownloadTempPath);
+					File file  = new File(mThemeDownloadPath);
 					if (file.exists()) {
 						file.delete();
 					}
@@ -423,7 +420,7 @@ public class ThemeOnlineDetailActivity extends Activity implements
 	}
 
 	private void updateTheme() {
-		File sourceFile = new File(mThemeDownloadTempPath);
+		File sourceFile = new File(mThemeDownloadPath);
 		
 		if (!sourceFile.exists()) {
 //			Toast.makeText(getApplicationContext(), "本主题不存在，请检查sdcard", Toast.LENGTH_SHORT).show();
@@ -462,7 +459,7 @@ public class ThemeOnlineDetailActivity extends Activity implements
 		//设置声音特效，铃声，通知声，来电声
 		ThemeResouceManager.getInstance().setDefalutSound(getApplicationContext());
 		
-		PreferencesManager.getInstance(getApplicationContext()).setThemeKey(mThemeDownloadTempPath);
+		PreferencesManager.getInstance(getApplicationContext()).setThemeKey(mThemeDownloadPath);
 		//设置墙纸
 		WallpaperManager wallpaperManager = WallpaperManager.getInstance(getApplicationContext());
 		try {
@@ -483,10 +480,13 @@ public class ThemeOnlineDetailActivity extends Activity implements
 		
 		mProgressBar.setProgress(100);
 		
-		boolean fontsExist = ThemeResouceManager.getInstance().isExist(mThemeDownloadTempPath, "fonts/Roboto-Regular.ttf");
-		boolean effectExist = ThemeResouceManager.getInstance().isExist(mThemeDownloadTempPath, "audio/ui/Effect_Tick.ogg");
-		boolean lockExist = ThemeResouceManager.getInstance().isExist(mThemeDownloadTempPath, "audio/ui/Lock.ogg");
-		boolean unLockExist = ThemeResouceManager.getInstance().isExist(mThemeDownloadTempPath, "audio/ui/Unlock.ogg");
+		Intent i = new Intent(ThemeUtils.THEME_SYSTEM_UI_NAVIGATIONBAR_UPDATE);
+		ThemeOnlineDetailActivity.this.sendBroadcast(i);
+		
+		boolean fontsExist = ThemeResouceManager.getInstance().isExist(mThemeDownloadPath, "fonts/Roboto-Regular.ttf");
+		boolean effectExist = ThemeResouceManager.getInstance().isExist(mThemeDownloadPath, "audio/ui/Effect_Tick.ogg");
+		boolean lockExist = ThemeResouceManager.getInstance().isExist(mThemeDownloadPath, "audio/ui/Lock.ogg");
+		boolean unLockExist = ThemeResouceManager.getInstance().isExist(mThemeDownloadPath, "audio/ui/Unlock.ogg");
 		Log.d("TAG", "onClick:"+fontsExist+",effectExist:"+effectExist+",lockExist:"+lockExist+",unLockExist:"+unLockExist);
 		
 		//假如主题包中存在 字体，触摸，开屏，锁屏音效就弹出一个显示是否重启的对话框
