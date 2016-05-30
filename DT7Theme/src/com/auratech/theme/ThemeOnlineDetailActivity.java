@@ -8,12 +8,14 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.WallpaperManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.os.RemoteException;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -32,6 +34,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.auratech.theme.bean.DescriptionBean;
 import com.auratech.theme.bean.ThemeInfoBean;
 import com.auratech.theme.utils.BitmapHelp;
 import com.auratech.theme.utils.CircleImageView;
@@ -376,10 +379,10 @@ public class ThemeOnlineDetailActivity extends Activity implements
 					//启动launcher
 					Intent intent = new Intent(Intent.ACTION_MAIN);  
 					intent.addCategory(Intent.CATEGORY_HOME);  
-					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  
+					intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);  
 					startActivity(intent); 
 					//结束自己的进程
-					android.os.Process.killProcess(android.os.Process.myPid());
+//					android.os.Process.killProcess(android.os.Process.myPid());
 				}
 			});
 			yes.setOnClickListener(new OnClickListener() {
@@ -460,28 +463,43 @@ public class ThemeOnlineDetailActivity extends Activity implements
 		ThemeResouceManager.getInstance().setDefalutSound(getApplicationContext());
 		
 		PreferencesManager.getInstance(getApplicationContext()).setThemeKey(mThemeDownloadPath);
+		
+		DescriptionBean bean = ThemeResouceManager.getInstance().getThemeDescriptionBean(mThemeDownloadPath);
 		//设置墙纸
 		WallpaperManager wallpaperManager = WallpaperManager.getInstance(getApplicationContext());
-		try {
-			Bitmap bmp = ThemeResouceManager.getInstance().getImageFromResource(ThemeResouceManager.getInstance().getThemeFileName(themBean.getThemefile()),"default_wallpaper.jpg", ThemeResouceManager.THEME_TYPE_WALLPAPER, ThemeResouceManager.THEME_PATH, new ThemeImageOptions(1024, 600));
-			if (bmp != null) {
-				wallpaperManager.setBitmap(bmp);
+		
+		if (bean.isLiveWallpaper()) {
+			try {
+				ComponentName name = new ComponentName("com.auratech.wallpaper", "com.auratech.wallpaper.AuraWallpaper");
+				wallpaperManager.getIWallpaperManager().setWallpaperComponent(name);
+			} catch (RemoteException e) {
+				e.printStackTrace();
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
+		} else {
+			try {
+				Bitmap bmp = ThemeResouceManager.getInstance().getImageFromResource(ThemeResouceManager.getInstance().getThemeFileName(themBean.getThemefile()), bean.getWallPaper(), ThemeResouceManager.THEME_TYPE_WALLPAPER, ThemeResouceManager.THEME_PATH, new ThemeImageOptions(1024, 600));
+				if (bmp != null) {
+					wallpaperManager.setBitmap(bmp);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
+		
+		
 		
 		mProgressBar.setProgress(80);
 		
 		//结束launcher进程
 		ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-		activityManager.killBackgroundProcesses("com.auratech.launcher");
+//		activityManager.killBackgroundProcesses("com.auratech.launcher");
+		activityManager.forceStopPackage("com.auratech.launcher");
 		
 		
 		mProgressBar.setProgress(100);
 		
 		Intent i = new Intent(ThemeUtils.THEME_SYSTEM_UI_NAVIGATIONBAR_UPDATE);
-		ThemeOnlineDetailActivity.this.sendBroadcast(i);
+		ThemeOnlineDetailActivity.this.getApplicationContext().sendBroadcast(i);
 		
 		boolean fontsExist = ThemeResouceManager.getInstance().isExist(mThemeDownloadPath, "fonts/Roboto-Regular.ttf");
 		boolean effectExist = ThemeResouceManager.getInstance().isExist(mThemeDownloadPath, "audio/ui/Effect_Tick.ogg");
@@ -503,13 +521,13 @@ public class ThemeOnlineDetailActivity extends Activity implements
 			//启动launcher
 			Intent intent = new Intent(Intent.ACTION_MAIN);  
 			intent.addCategory(Intent.CATEGORY_HOME);  
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);  
 			startActivity(intent); 
 			//重启
 //			PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
 //			powerManager.reboot("");
 			//结束自己的进程
-			android.os.Process.killProcess(android.os.Process.myPid());
+//			android.os.Process.killProcess(android.os.Process.myPid());
 		}
 	}
 

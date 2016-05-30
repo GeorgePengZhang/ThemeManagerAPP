@@ -186,6 +186,7 @@ public class WidgetPreviewLoader {
         final String name = getObjectName(o);
         final String packageName = getObjectPackage(o);
         // check if the package is valid
+        
         boolean packageValid = true;
         synchronized(sInvalidPackages) {
             packageValid = !sInvalidPackages.contains(packageName);
@@ -461,8 +462,7 @@ public class WidgetPreviewLoader {
         if (info instanceof AppWidgetProviderInfo) {
             return generateWidgetPreview((AppWidgetProviderInfo) info, preview);
         } else {
-            return generateShortcutPreview(
-                    (ResolveInfo) info, mPreviewBitmapWidth, mPreviewBitmapHeight, preview);
+            return generateShortcutPreview((ResolveInfo) info, mPreviewBitmapWidth, mPreviewBitmapHeight, preview);
         }
     }
 

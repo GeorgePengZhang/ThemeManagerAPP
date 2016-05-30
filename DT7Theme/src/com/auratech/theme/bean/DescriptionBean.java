@@ -32,6 +32,9 @@ public class DescriptionBean implements Parcelable{
 	public static final String PADDINGRIGHT = "paddingRight";
 	public static final String PADDINGBOTTOM = "paddingBottom";
 	
+	public static final String ISLIVEWALLPAPER = "isLiveWallpaper";
+	
+	
 	private String mTheme;
 	
 	private String mAuthors;
@@ -66,6 +69,8 @@ public class DescriptionBean implements Parcelable{
 	
 	private int mIconPadBottom;
 	
+	private boolean mIsLiveWallpaper;
+	
 	
 	private ArrayList<String> previews = new ArrayList<String>();
 	
@@ -91,6 +96,8 @@ public class DescriptionBean implements Parcelable{
 		mIconPadTop = source.readInt();
 		mIconPadRight = source.readInt();
 		mIconPadBottom = source.readInt();
+		
+		mIsLiveWallpaper = source.readByte() != 0;
 		
 		source.readList(previews, ClassLoader.getSystemClassLoader());
 	}
@@ -242,6 +249,14 @@ public class DescriptionBean implements Parcelable{
 		this.mIconPadBottom = iconPadBottom;
 	}
 
+	public boolean isLiveWallpaper() {
+		return mIsLiveWallpaper;
+	}
+
+	public void setIsLiveWallpaper(boolean isLiveWallpaper) {
+		this.mIsLiveWallpaper = isLiveWallpaper;
+	}
+
 	@Override
 	public int describeContents() {
 		return 0;
@@ -267,6 +282,8 @@ public class DescriptionBean implements Parcelable{
 		dest.writeInt(mIconPadTop);
 		dest.writeInt(mIconPadRight);
 		dest.writeInt(mIconPadBottom);
+		
+		dest.writeByte((byte) (mIsLiveWallpaper ? 1 : 0));
 		
 		dest.writeList(previews);
 	}

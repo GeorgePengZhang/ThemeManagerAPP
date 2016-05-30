@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.text.TextUtils;
-import android.util.Log;
 
 public class PreferencesManager {
 	
@@ -14,19 +12,18 @@ public class PreferencesManager {
 	private static final String TAG = "PreferencesManager";
 	
 	private SharedPreferences mSharedPreferences;
+	private Context mThemeContext;
 	
 	private static PreferencesManager mPreferencesManager;
 	
 	private PreferencesManager(Context context) {
-		Context packageContext = null;
-		
 		try {
-			packageContext = context.createPackageContext("com.auratech.theme", Context.CONTEXT_IGNORE_SECURITY);
+			mThemeContext = context.createPackageContext("com.auratech.theme", Context.CONTEXT_IGNORE_SECURITY);
 		} catch (NameNotFoundException e) {
 			e.printStackTrace();
 		} 
-		if (packageContext != null) {
-			mSharedPreferences = packageContext.getSharedPreferences(THEMES, Context.MODE_WORLD_READABLE | Context.MODE_WORLD_WRITEABLE | Context.MODE_MULTI_PROCESS);
+		if (mThemeContext != null) {
+			mSharedPreferences = mThemeContext.getSharedPreferences(THEMES, Context.MODE_WORLD_READABLE | Context.MODE_WORLD_WRITEABLE | Context.MODE_MULTI_PROCESS);
 		}
 	}
 	
@@ -43,23 +40,18 @@ public class PreferencesManager {
 	}
 
 	public String getThemeKey() {
+		mSharedPreferences = mThemeContext.getSharedPreferences(THEMES, Context.MODE_WORLD_READABLE | Context.MODE_WORLD_READABLE | Context.MODE_MULTI_PROCESS);
 		if (mSharedPreferences == null) {
 			return "";
 		}
 		
-		String themekey = mSharedPreferences.getString(THEME_KEY, "");
-		Log.d("XXX", "getThemeKey:"+themekey+",mSharedPreferences:"+mSharedPreferences);
-		if (TextUtils.isEmpty(themekey)) {
-			themekey = ThemeResouceManager.THEME_DEAFULT_ABSOLUTE_PATH;
-		}
+		String themekey = mSharedPreferences.getString(THEME_KEY, ThemeResouceManager.THEME_DEAFULT_ABSOLUTE_PATH);
 	
 		return themekey;
 	}
 	
 	public void setThemeKey(String theme) {
 		if (mSharedPreferences != null) {
-			
-			Log.d("XXX", "setThemeKey:"+theme+",mSharedPreferences:"+mSharedPreferences);
 			Editor editor = mSharedPreferences.edit();
 			editor.putString(THEME_KEY, theme);
 			editor.apply();

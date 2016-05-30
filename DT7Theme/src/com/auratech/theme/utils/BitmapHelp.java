@@ -14,7 +14,7 @@ public class BitmapHelp {
     private static BitmapUtils bitmapUtils;
 
     /**
-     * BitmapUtils2?ê?μ￥àyμ? ?ù?YDèòa?????à????è?êμàyμ?·?·¨
+     * BitmapUtils不是单例的 根据需要重载多个获取实例的方法
      * @param appContext application context
      * @return
      */

@@ -509,7 +509,7 @@ public class Launcher extends Activity
                 if (ThemeResouceManager.THEME_DEAFULT_ABSOLUTE_PATH.equals(themeKey)) {
                 	WallpaperManager wallpaperManager = WallpaperManager.getInstance(getApplicationContext());
             		try {
-            			Bitmap bmp = ThemeResouceManager.getInstance().getImageFromResource(ThemeResouceManager.THEME_DEAFULT_NAME, "default_wallpaper.jpg", ThemeResouceManager.THEME_TYPE_WALLPAPER, ThemeResouceManager.THEME_DEFAULT_PATH, new ThemeImageOptions(1024, 600));
+            			Bitmap bmp = ThemeResouceManager.getInstance().getImageFromResource(ThemeResouceManager.THEME_DEAFULT_NAME, app.getDescriptionBean().getWallPaper(), ThemeResouceManager.THEME_TYPE_WALLPAPER, ThemeResouceManager.THEME_DEFAULT_PATH, new ThemeImageOptions(1024, 600));
             			if (bmp != null) {
             				wallpaperManager.setBitmap(bmp);
             			}

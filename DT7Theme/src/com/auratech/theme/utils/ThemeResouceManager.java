@@ -286,6 +286,7 @@ public class ThemeResouceManager {
 			String descriptions = jo.getString(DescriptionBean.DESCRIPTIONS);
 			String thumbnails = jo.getString(DescriptionBean.THUMBNAILS);
 			String wallPaper = jo.getString(DescriptionBean.WALLPAPER);
+			boolean isLiveWallpaper = jo.getBoolean(DescriptionBean.ISLIVEWALLPAPER);
 
 			bean.setTheme(theme);
 			bean.setPath(path);
@@ -295,6 +296,7 @@ public class ThemeResouceManager {
 			bean.setDescriptions(descriptions);
 			bean.setThumbnails(thumbnails);
 			bean.setWallPaper(wallPaper);
+			bean.setIsLiveWallpaper(isLiveWallpaper);
 			
 
 			if (jo.has(DescriptionBean.FONT)) {

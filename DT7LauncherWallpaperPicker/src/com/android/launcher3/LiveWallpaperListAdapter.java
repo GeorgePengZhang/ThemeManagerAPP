@@ -122,8 +122,7 @@ public class LiveWallpaperListAdapter extends BaseAdapter implements ListAdapter
         @Override
         public void onClick(WallpaperPickerActivity a) {
             Intent preview = new Intent(WallpaperManager.ACTION_CHANGE_LIVE_WALLPAPER);
-            preview.putExtra(WallpaperManager.EXTRA_LIVE_WALLPAPER_COMPONENT,
-                    mInfo.getComponent());
+            preview.putExtra(WallpaperManager.EXTRA_LIVE_WALLPAPER_COMPONENT, mInfo.getComponent());
             a.onLiveWallpaperPickerLaunch(mInfo);
             a.startActivityForResultSafely(preview, WallpaperPickerActivity.PICK_LIVE_WALLPAPER);
         }
@@ -171,10 +170,17 @@ public class LiveWallpaperListAdapter extends BaseAdapter implements ListAdapter
                     continue;
                 }
 
+                if ("com.auratech.wallpaper".equals(info.getPackageName())&&"com.auratech.wallpaper.AuraWallpaper".equals(info.getServiceName())){
+                	continue ;
+                }
+                
 
                 Drawable thumb = info.loadThumbnail(packageManager);
                 Intent launchIntent = new Intent(WallpaperService.SERVICE_INTERFACE);
                 launchIntent.setClassName(info.getPackageName(), info.getServiceName());
+                
+                Log.w(LOG_TAG, "Skipping wallpaper " + info.getPackageName()+",getServiceName:"+info.getServiceName()+",title:"+info.loadLabel(packageManager));
+                
                 LiveWallpaperTile wallpaper = new LiveWallpaperTile(thumb, info, launchIntent);
                 publishProgress(wallpaper);
             }
