@@ -42,7 +42,7 @@ public class PreferencesManager {
 	public String getThemeKey() {
 		mSharedPreferences = mThemeContext.getSharedPreferences(THEMES, Context.MODE_WORLD_READABLE | Context.MODE_WORLD_READABLE | Context.MODE_MULTI_PROCESS);
 		if (mSharedPreferences == null) {
-			return "";
+			return ThemeResouceManager.THEME_DEAFULT_ABSOLUTE_PATH;
 		}
 		
 		String themekey = mSharedPreferences.getString(THEME_KEY, ThemeResouceManager.THEME_DEAFULT_ABSOLUTE_PATH);

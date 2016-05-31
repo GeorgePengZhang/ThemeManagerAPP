@@ -382,6 +382,7 @@ public class ThemeOnlineDetailActivity extends Activity implements
 					intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);  
 					startActivity(intent); 
 					//结束自己的进程
+					finish();
 //					android.os.Process.killProcess(android.os.Process.myPid());
 				}
 			});
