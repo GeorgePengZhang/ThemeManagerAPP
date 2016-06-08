@@ -13,8 +13,6 @@ import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
 import org.apache.tools.zip.ZipOutputStream;
 
-import android.util.Log;
-
 public class ZipUtil {
 
 	private static final String TAG = "ZipUtil";
@@ -119,7 +117,7 @@ public class ZipUtil {
 					.hasMoreElements();) {
 				ZipEntry entry = (ZipEntry) entries.nextElement();
 				file = new File(destFile + File.separator + entry.getName());
-				Log.d(TAG, "unZip:" + unZipfile + ",name:" + entry.getName());
+//				Log.d(TAG, "unZip:" + unZipfile + ",name:" + entry.getName());
 
 				if (entry.isDirectory()) {
 					file.mkdirs();
@@ -162,7 +160,7 @@ public class ZipUtil {
 		try {
 			this.zipFile = new ZipFile(zipFilePath);
 
-			Log.d(TAG,"getResoucesFromZip:"+zipFilePath+",resoucesPathName:"+resoucesPathName);
+//			Log.d(TAG,"getResoucesFromZip:"+zipFilePath+",resoucesPathName:"+resoucesPathName);
 			ZipEntry entry = this.zipFile.getEntry(resoucesPathName);
 			if (entry != null) {
 				is = this.zipFile.getInputStream(entry);
@@ -180,7 +178,7 @@ public class ZipUtil {
 			this.zipFile = new ZipFile(zipFilePath);
 			
 			ZipEntry entry = this.zipFile.getEntry(resoucePathName);
-			Log.d(TAG,"getResoucesFromZip:"+zipFilePath+",resoucesPathName:"+resoucePathName+",entry:"+entry);
+//			Log.d(TAG,"getResoucesFromZip:"+zipFilePath+",resoucesPathName:"+resoucePathName+",entry:"+entry);
 			if (entry == null) {
 				ret = false;
 			}
