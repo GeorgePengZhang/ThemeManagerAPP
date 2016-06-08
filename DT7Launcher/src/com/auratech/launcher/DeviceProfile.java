@@ -573,9 +573,6 @@ public class DeviceProfile {
         int zoneHeight = (int) (overviewModeIconZoneRatio * availableHeightPx);
         zoneHeight = Math.min(overviewModeMaxIconZoneHeightPx,
                 Math.max(overviewModeMinIconZoneHeightPx, zoneHeight));
-        
-        Log.d(TAG,"getOverviewModeButtonBarRect:"+overviewModeIconZoneRatio+",availableHeightPx:"+availableHeightPx
-        		+",overviewModeMaxIconZoneHeightPx:"+overviewModeMaxIconZoneHeightPx+",overviewModeMinIconZoneHeightPx:"+overviewModeMinIconZoneHeightPx);
         return new Rect(0, availableHeightPx - zoneHeight, 0, availableHeightPx);
     }
 

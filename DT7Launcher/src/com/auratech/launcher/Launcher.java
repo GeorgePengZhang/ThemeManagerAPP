@@ -505,18 +505,18 @@ public class Launcher extends Activity
                 mLauncherClings.showFirstRunCling();
                 
                 //++ add steven zhang by 20160516
-                String themeKey = app.getThemeKey();
-                if (ThemeResouceManager.THEME_DEAFULT_ABSOLUTE_PATH.equals(themeKey)) {
-                	WallpaperManager wallpaperManager = WallpaperManager.getInstance(getApplicationContext());
-            		try {
-            			Bitmap bmp = ThemeResouceManager.getInstance().getImageFromResource(ThemeResouceManager.THEME_DEAFULT_NAME, app.getDescriptionBean().getWallPaper(), ThemeResouceManager.THEME_TYPE_WALLPAPER, ThemeResouceManager.THEME_DEFAULT_PATH, new ThemeImageOptions(1024, 600));
-            			if (bmp != null) {
-            				wallpaperManager.setBitmap(bmp);
-            			}
-            		} catch (IOException e) {
-            			e.printStackTrace();
-            		}
-                }
+//                String themeKey = app.getThemeKey();
+//                if (ThemeResouceManager.THEME_DEAFULT_ABSOLUTE_PATH.equals(themeKey)) {
+//                	WallpaperManager wallpaperManager = WallpaperManager.getInstance(getApplicationContext());
+//            		try {
+//            			Bitmap bmp = ThemeResouceManager.getInstance().getImageFromResource(ThemeResouceManager.THEME_DEAFULT_NAME, app.getDescriptionBean().getWallPaper(), ThemeResouceManager.THEME_TYPE_WALLPAPER, ThemeResouceManager.THEME_DEFAULT_PATH, new ThemeImageOptions(1024, 600));
+//            			if (bmp != null) {
+//            				wallpaperManager.setBitmap(bmp);
+//            			}
+//            		} catch (IOException e) {
+//            			e.printStackTrace();
+//            		}
+//                }
                 //++ add steven zhang by 20160516
             }
         } else {
@@ -634,8 +634,6 @@ public class Launcher extends Activity
 
         final int previousMnc = sLocaleConfiguration.mnc;
         final int mnc = configuration.mnc;
-        
-        Log.d(TAG,"checkForLocaleChange:"+locale+",mcc:"+mcc+",mnc:"+mnc);
 
         boolean localeChanged = !locale.equals(previousLocale) || mcc != previousMcc || mnc != previousMnc;
 
@@ -669,7 +667,6 @@ public class Launcher extends Activity
             configuration.locale = in.readUTF();
             configuration.mcc = in.readInt();
             configuration.mnc = in.readInt();
-            Log.d(TAG,"readConfiguration:"+configuration.locale+",mcc:"+configuration.mcc+",mnc:"+configuration.mnc);
         } catch (FileNotFoundException e) {
             // Ignore
         } catch (IOException e) {
@@ -3137,6 +3134,8 @@ public class Launcher extends Activity
                 @Override
                 public void onAnimationStart(Animator animation) {
                     // Prepare the position
+                    toView.setTranslationX(0.0f);
+                    toView.setTranslationY(0.0f);
                     toView.setVisibility(View.VISIBLE);
                     toView.bringToFront();
                 }
@@ -3148,8 +3147,6 @@ public class Launcher extends Activity
 					// not fix that
 					toView.setScaleX(1.0f);
 					toView.setScaleY(1.0f);
-					toView.setAlpha(1f);
-					
 					//add end
                     dispatchOnLauncherTransitionEnd(fromView, animated, false);
                     dispatchOnLauncherTransitionEnd(toView, animated, false);
@@ -4134,6 +4131,7 @@ public class Launcher extends Activity
 
         item.hostView.setTag(item);
         item.onBindAppWidget(this);
+
 
         workspace.addInScreen(item.hostView, item.container, item.screenId, item.cellX,
                 item.cellY, item.spanX, item.spanY, false);

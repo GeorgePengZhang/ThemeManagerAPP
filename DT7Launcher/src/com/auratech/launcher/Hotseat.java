@@ -167,11 +167,11 @@ public class Hotseat extends FrameLayout {
             String themeKey = LauncherAppState.getInstance().getThemeKey();
             
             if (mAppsBitmapNormal == null) {
-            	mAppsBitmapNormal = ThemeResouceManager.getInstance().getImageResourceFromARZ(themeKey, "ic_allapps.png", ThemeResouceManager.THEME_TYPE_ICONS, new ThemeImageOptions(83, 83));
+            	mAppsBitmapNormal = ThemeResouceManager.getInstance().getImageResourceFromPath(themeKey, "ic_allapps.png", ThemeResouceManager.THEME_TYPE_ICONS, new ThemeImageOptions(83, 83));
             }
             
             if (mAppsBitmapPress == null) {
-            	mAppsBitmapPress = ThemeResouceManager.getInstance().getImageResourceFromARZ(themeKey, "ic_allapps_pressed.png", ThemeResouceManager.THEME_TYPE_ICONS, new ThemeImageOptions(83, 83));
+            	mAppsBitmapPress = ThemeResouceManager.getInstance().getImageResourceFromPath(themeKey, "ic_allapps_pressed.png", ThemeResouceManager.THEME_TYPE_ICONS, new ThemeImageOptions(83, 83));
             }
             
             Drawable d = getStateDrable(mAppsBitmapNormal, mAppsBitmapPress);

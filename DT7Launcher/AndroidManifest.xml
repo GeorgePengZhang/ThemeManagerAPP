@@ -232,9 +232,12 @@
             android:value="true" />
         
         <!-- micheal add gallery widget for disney theme on 20160504 begin  -->
-            <receiver android:name="com.auratech.launcher.widget.GalleryWidgetProvider" >
+            <receiver android:name="com.auratech.launcher.widget.GalleryWidgetProvider" 
+                android:label="Photo">
             <intent-filter>
                 <action android:name="com.aura.theme.widgetGallery"/>
+                <action android:name="com.android.systemui.navigationbar.update"/>
+                <action android:name="android.location.MODE_CHANGED"/>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
 

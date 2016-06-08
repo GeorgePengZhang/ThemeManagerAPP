@@ -166,10 +166,8 @@ public class FolderIcon extends FrameLayout implements FolderListener {
         lp.height = grid.folderIconSizePx;
 
         if (mIconBgBitmap == null) {
-//        	String theme = Launcher.mThemeKey;
         	String themeKey = LauncherAppState.getInstance().getThemeKey();
     		mIconBgBitmap = ThemeResouceManager.getInstance().getImageResourceFromPath(themeKey, "icon_folder.png", ThemeResouceManager.THEME_TYPE_ICONS, new ThemeImageOptions(lp.width, lp.height));
-    		  
         }
         
         if (mIconBgBitmap != null) {

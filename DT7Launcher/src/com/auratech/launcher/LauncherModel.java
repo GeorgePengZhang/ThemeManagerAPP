@@ -2627,8 +2627,7 @@ public class LauncherModel extends BroadcastReceiver {
                      ||("com.android.speechrecorder".equals(component.getPackageName()))
                      ||("com.android.development".equals(component.getPackageName()))
                      ||("honestar.irtest.Aura".equals(component.getPackageName())) 
-                     ||("com.uei.activity".equals(component.getPackageName())))
-									 )
+                     ||("com.uei.activity".equals(component.getPackageName()))))
 					{
                 		mBgAllAppsList.add(new AppInfo(packageManager, app, mIconCache, mLabelCache));
 					}

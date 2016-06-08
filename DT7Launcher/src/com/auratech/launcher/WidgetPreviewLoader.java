@@ -36,6 +36,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.auratech.launcher.R;
+import com.auratech.theme.utils.ThemeResouceManager;
+import com.auratech.theme.utils.ThemeImageLoader.ThemeImageOptions;
 
 abstract class SoftReferenceThreadLocal<T> {
     private ThreadLocal<SoftReference<T>> mThreadLocal;
@@ -228,7 +230,9 @@ public class WidgetPreviewLoader {
         Bitmap preview = null;
 
         if (packageValid) {
-            preview = readFromDb(name, unusedBitmap);
+        	if (!isCustomWidget(o)) {
+        		preview = readFromDb(name, unusedBitmap);
+        	}
         }
 
         if (preview != null) {
@@ -247,6 +251,10 @@ public class WidgetPreviewLoader {
             synchronized(mLoadedPreviews) {
                 mLoadedPreviews.put(name, new WeakReference<Bitmap>(preview));
             }
+            
+            if (isCustomWidget(o)) {
+            	return preview;
+            }
 
             // write to db on a thread pool... this can be done lazily and improves the performance
             // of the first time widget previews are loaded
@@ -261,6 +269,27 @@ public class WidgetPreviewLoader {
         }
     }
 
+    /**
+     * 是否是自定义的widget
+     * @param o
+     * @return
+     */
+	private boolean isCustomWidget(final Object o) {
+		boolean flag = false;
+		if (o instanceof AppWidgetProviderInfo) {
+			AppWidgetProviderInfo appInfo = (AppWidgetProviderInfo) o;
+			String pName = appInfo.provider.getPackageName();
+			String cName = appInfo.provider.getClassName();
+			
+			if ("com.android.deskclock".equals(pName) && "com.android.alarmclock.AnalogAppWidgetProvider".equals(cName)) {
+		    	flag = true;
+		    } else if ("com.auratech.launcher".equals(pName) && "com.auratech.launcher.widget.GalleryWidgetProvider".equals(cName)) {
+		    	flag = true;
+		    }
+		}
+		return flag;
+	}
+	
     public void recycleBitmap(Object o, Bitmap bitmapToRecycle) {
         String name = getObjectName(o);
         synchronized (mLoadedPreviews) {
@@ -494,10 +523,23 @@ public class WidgetPreviewLoader {
 
         Drawable drawable = null;
         if (previewImage != 0) {
-            drawable = mPackageManager.getDrawable(packageName, previewImage, null);
+        	String pName = provider.getPackageName();
+    		String cName = provider.getClassName();
+    		String themeKey = LauncherAppState.getInstance().getThemeKey();
+    		
+    		if ("com.android.deskclock".equals(pName) && "com.android.alarmclock.AnalogAppWidgetProvider".equals(cName)) {
+    			drawable = ThemeResouceManager.getInstance().getWidgetDrawableFromPath(themeKey, ThemeResouceManager.THEME_TYPE_CLOCK_PREVIEW);
+    	    } else if ("com.auratech.launcher".equals(pName) && "com.auratech.launcher.widget.GalleryWidgetProvider".equals(cName)) {
+    	    	drawable = ThemeResouceManager.getInstance().getWidgetDrawableFromPath(themeKey, ThemeResouceManager.THEME_TYPE_GALLERY_IMAGE);
+    	    }
+        	
+            
+        	if (drawable == null) {
+        		drawable = mPackageManager.getDrawable(packageName, previewImage, null);
+        	}
+        	
             if (drawable == null) {
-                Log.w(TAG, "Can't load widget preview drawable 0x" +
-                        Integer.toHexString(previewImage) + " for provider: " + provider);
+                Log.w(TAG, "Can't load widget preview drawable 0x" + Integer.toHexString(previewImage) + " for provider: " + provider);
             }
         }
 
@@ -568,7 +610,7 @@ public class WidgetPreviewLoader {
             previewWidth = (int) (scale * previewWidth);
             previewHeight = (int) (scale * previewHeight);
         }
-
+        
         // If a bitmap is passed in, we use it; otherwise, we create a bitmap of the right size
         if (preview == null) {
             preview = Bitmap.createBitmap(previewWidth, previewHeight, Config.ARGB_8888);

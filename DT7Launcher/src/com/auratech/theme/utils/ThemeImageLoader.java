@@ -186,7 +186,7 @@ public class ThemeImageLoader {
 		Bitmap bmp = null;
 		
 		String pathName = zipFilePath+resoucesPathName;
-		Log.d("TAG", "getBitmapFromPath:"+pathName);
+//		Log.d("TAG", "getBitmapFromPath:"+pathName);
 		File file = new File(pathName);
 		if (!file.exists()) {
 			return bmp;

@@ -89,15 +89,11 @@ public class IconCache {
     }
 
     public Drawable getFullResDefaultActivityIcon() {
-    	Log.d(TAG,"getFullResDefaultActivityIcon");
-    	
         return getFullResIcon(Resources.getSystem(),
                 android.R.mipmap.sym_def_app_icon);
     }
 
     public Drawable getFullResIcon(Resources resources, int iconId) {
-    	Log.d(TAG,"getFullResIcon Resources resources, int iconId:"+mIconDpi+",iconId:"+iconId);
-    	
         Drawable d;
         try {
             d = resources.getDrawableForDensity(iconId, mIconDpi);
@@ -108,9 +104,7 @@ public class IconCache {
         return (d != null) ? d : getFullResDefaultActivityIcon();
     }
 
-	public Drawable getFullResIcon(String packageName, int iconId) {
-    	Log.d(TAG,"getFullResIcon String packageName, int iconId");
-    	
+    public Drawable getFullResIcon(String packageName, int iconId) {
         Resources resources;
         try {
             resources = mPackageManager.getResourcesForApplication(packageName);
@@ -126,13 +120,11 @@ public class IconCache {
     }
 
     public Drawable getFullResIcon(ResolveInfo info) {
-    	Log.d(TAG,"getFullResIcon ResolveInfo info");
-    	
         return getFullResIcon(info.activityInfo);
     }
 
     public Drawable getFullResIcon(ActivityInfo info) {
-    	Log.d(TAG,"getFullResIcon ActivityInfo info");
+
         Resources resources;
         try {
             resources = mPackageManager.getResourcesForApplication(
@@ -146,13 +138,11 @@ public class IconCache {
                 return getFullResIcon(resources, iconId);
             }
         }
-        
+
         return getFullResDefaultActivityIcon();
     }
 
     private Bitmap makeDefaultIcon() {
-    	Log.d(TAG,"makeDefaultIcon");
-    	
         Drawable d = getFullResDefaultActivityIcon();
         Bitmap b = Bitmap.createBitmap(Math.max(d.getIntrinsicWidth(), 1),
                 Math.max(d.getIntrinsicHeight(), 1),
@@ -168,8 +158,6 @@ public class IconCache {
      * Remove any records for the supplied ComponentName.
      */
     public void remove(ComponentName componentName) {
-    	Log.d(TAG,"remove ComponentName componentName");
-    	
         synchronized (mCache) {
             mCache.remove(componentName);
         }
@@ -179,8 +167,6 @@ public class IconCache {
      * Remove any records for the supplied package name.
      */
     public void remove(String packageName) {
-    	Log.d(TAG,"remove String packageName");
-    	
         HashSet<ComponentName> forDeletion = new HashSet<ComponentName>();
         for (ComponentName componentName: mCache.keySet()) {
             if (componentName.getPackageName().equals(packageName)) {
@@ -196,8 +182,6 @@ public class IconCache {
      * Empty out the cache.
      */
     public void flush() {
-    	Log.d(TAG,"flush");
-    	
         synchronized (mCache) {
             mCache.clear();
         }
@@ -207,15 +191,12 @@ public class IconCache {
      * Empty out the cache that aren't of the correct grid size
      */
     public void flushInvalidIcons(DeviceProfile grid) {
-    	Log.d(TAG,"flushInvalidIcons");
-    	
         synchronized (mCache) {
             Iterator<Entry<ComponentName, CacheEntry>> it = mCache.entrySet().iterator();
             while (it.hasNext()) {
                 final CacheEntry e = it.next().getValue();
                 if (e.icon.getWidth() < grid.iconSizePx || e.icon.getHeight() < grid.iconSizePx) {
                     it.remove();
-                    Log.d(TAG,"flushInvalidIcons remove");
                 }
             }
         }
@@ -228,7 +209,6 @@ public class IconCache {
     //AllAppsList.java updatePackage和AppInfo.java AppInfo中更新
     public void getTitleAndIcon(AppInfo application, ResolveInfo info,
             HashMap<Object, CharSequence> labelCache) {
-    	Log.d(TAG,"getTitleAndIcon");
         synchronized (mCache) {
             CacheEntry entry = cacheLocked(application.componentName, info, labelCache);
 
@@ -238,15 +218,10 @@ public class IconCache {
     }
 
     public Bitmap getIcon(Intent intent) {
-    	Log.d(TAG,"getIcon Intent intent");
-    	
         return getIcon(intent, null);
     }
 
     public Bitmap getIcon(Intent intent, String title) {
-    	
-    	Log.d(TAG,"getIcon Intent intent, String title");
-    	
         synchronized (mCache) {
             final ResolveInfo resolveInfo = mPackageManager.resolveActivity(intent, 0);
             ComponentName component = intent.getComponent();
@@ -267,9 +242,6 @@ public class IconCache {
     //LauncherModel.java -> getShortcutInfo
     public Bitmap getIcon(ComponentName component, ResolveInfo resolveInfo,
             HashMap<Object, CharSequence> labelCache) {
-    	
-    	Log.d(TAG,"getIcon ComponentName component, ResolveInfo resolveInfo,HashMap<Object, CharSequence> labelCache");
-    	
         synchronized (mCache) {
             if (resolveInfo == null || component == null) {
                 return null;
@@ -286,9 +258,6 @@ public class IconCache {
 
     private CacheEntry cacheLocked(ComponentName componentName, ResolveInfo info,
             HashMap<Object, CharSequence> labelCache) {
-    	
-    	Log.d(TAG,"cacheLocked:"+getResourceFilename(componentName));
-    	
         CacheEntry entry = mCache.get(componentName);
         if (entry == null) {
             entry = new CacheEntry();
@@ -313,10 +282,8 @@ public class IconCache {
                 String themeKey = LauncherAppState.getInstance().getThemeKey();
                 
                 if (!TextUtils.isEmpty(themeKey)) {
-//                	bmp = ThemeResouceManager.getInstance().getImageResourceFromARZ(themeKey, info.activityInfo.name+".png", ThemeResouceManager.THEME_TYPE_ICONS, new ThemeImageOptions(72, 72));
                 	bmp = ThemeResouceManager.getInstance().getImageResourceFromPath(themeKey, info.activityInfo.name+".png", ThemeResouceManager.THEME_TYPE_ICONS, new ThemeImageOptions(72, 72));
-                	
-                	Log.d(TAG, "cacheLocked:"+themeKey+",packageName:"+info.activityInfo.name+",:"+themeKey.substring(0, themeKey.lastIndexOf("/")));
+//                	Log.d(TAG, "cacheLocked:"+themeKey+",packageName:"+info.activityInfo.name+",:"+themeKey.substring(0, themeKey.lastIndexOf("/")));
                 }
                 
                 if (bmp == null) {

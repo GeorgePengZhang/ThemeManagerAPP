@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Environment;
@@ -44,6 +45,14 @@ public class ThemeResouceManager {
 	public static final String THEME_TYPE_AUDIO_ALARMS = "audio/alarms/alarms.ogg";
 	public static final String THEME_TYPE_AUDIO_NOTIFICATIONS = "audio/notifications/notifications.ogg";
 	public static final String THEME_TYPE_AUDIO_RINGTONES = "audio/ringtones/ringtones.ogg";
+	
+	public static final String THEME_TYPE_CLOCK_PREVIEW = "com.android.deskclock/appwidget_analog_clock_preview.png";
+	public static final String THEME_TYPE_CLOCK_BG = "com.android.deskclock/clock_analog_dial.png";
+	public static final String THEME_TYPE_CLOCK_HOUR = "com.android.deskclock/clock_analog_hour.png";
+	public static final String THEME_TYPE_CLOCK_MINUTE = "com.android.deskclock/clock_analog_minute.png";
+	public static final String THEME_TYPE_CLOCK_SECOND = "com.android.deskclock/clock_analog_second.png";
+	
+	public static final String THEME_TYPE_GALLERY_IMAGE = "com.android.gallery3d/disney_gallery.png";
 	
 	private ZipUtil mZipUtil;
 	private File mThemeDir;
@@ -89,6 +98,7 @@ public class ThemeResouceManager {
 			return filename.toLowerCase(Locale.getDefault()).endsWith(".arz");
 		}
 	};
+	
 	
 	//得到theme/.data的file值
 	public File getThemeDatePath() {
@@ -185,6 +195,27 @@ public class ThemeResouceManager {
 
 		bmp = ThemeImageLoader.getInstance().getBitmapFromPath(themePath, resFolder+resName, options);
 		return bmp;
+	}
+	
+	public Drawable getWidgetDrawableFromPath(String themePath, String resName) {
+		Drawable drawable = null;
+
+		if (!mThemeDir.exists()) {
+			mThemeDir.mkdirs();
+		}
+
+		if (THEME_DEAFULT_ABSOLUTE_PATH.equals(themePath)) {
+			themePath = THEME_DEFAULT_PATH;
+		} else {
+			themePath = THEME_USED_PATH;
+		}
+
+		File file = new File (themePath+resName);
+		if (file.exists()) {
+			drawable = Drawable.createFromPath(themePath+resName);
+		}
+		
+		return drawable;
 	}
 	
 	/**

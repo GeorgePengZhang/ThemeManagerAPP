@@ -1459,7 +1459,6 @@ public class Workspace extends SmoothPagedView
     }
 
     void showOutlines() {
-    	Log.d(TAG,"showOutlines:"+isSmall()+",mIsSwitchingState:"+mIsSwitchingState);
         if (!isSmall() && !mIsSwitchingState) {
             if (mChildrenOutlineFadeOutAnimation != null) mChildrenOutlineFadeOutAnimation.cancel();
             if (mChildrenOutlineFadeInAnimation != null) mChildrenOutlineFadeInAnimation.cancel();
@@ -1470,7 +1469,6 @@ public class Workspace extends SmoothPagedView
     }
 
     void hideOutlines() {
-    	Log.d(TAG,"hideOutlines:"+isSmall()+",mIsSwitchingState:"+mIsSwitchingState);
         if (!isSmall() && !mIsSwitchingState) {
             if (mChildrenOutlineFadeInAnimation != null) mChildrenOutlineFadeInAnimation.cancel();
             if (mChildrenOutlineFadeOutAnimation != null) mChildrenOutlineFadeOutAnimation.cancel();

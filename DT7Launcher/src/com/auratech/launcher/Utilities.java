@@ -202,12 +202,9 @@ public final class Utilities {
 //                    canvas.drawBitmap(bmp, 0.0f, 0.0f, paint);
 //                }
             	if (mIconBgBitmap == null) {
-//            		String theme = PreferencesManager.getInstance(context).getThemeKey();
             		String themeKey = LauncherAppState.getInstance().getThemeKey();
-//            		mIconBgBitmap = ThemeResouceManager.getInstance().getImageResourceFromARZ(themeKey, "icon_background.png", ThemeResouceManager.THEME_TYPE_ICONS, new ThemeImageOptions(sIconTextureWidth, sIconTextureHeight));
             	
             		mIconBgBitmap = ThemeResouceManager.getInstance().getImageResourceFromPath(themeKey, "icon_background.png", ThemeResouceManager.THEME_TYPE_ICONS, new ThemeImageOptions(sIconTextureWidth, sIconTextureHeight));
-                    
             	}
                 	
             	if (mIconBgBitmap != null) {
@@ -392,8 +389,6 @@ public final class Utilities {
 
         sIconWidth = sIconHeight = (int) resources.getDimension(R.dimen.app_icon_size);
         sIconTextureWidth = sIconTextureHeight = sIconWidth;
-        
-        Log.d(TAG, "initStatics:"+sIconWidth);
 
         sBlurPaint.setMaskFilter(new BlurMaskFilter(5 * density, BlurMaskFilter.Blur.NORMAL));
         sGlowColorPressedPaint.setColor(0xffffc300);
@@ -408,7 +403,6 @@ public final class Utilities {
     public static void setIconSize(int widthPx) {
         sIconWidth = sIconHeight = widthPx;
         sIconTextureWidth = sIconTextureHeight = widthPx;
-        Log.d(TAG, "setIconSize:"+sIconWidth);
     }
 
     public static void scaleRect(Rect r, float scale) {
