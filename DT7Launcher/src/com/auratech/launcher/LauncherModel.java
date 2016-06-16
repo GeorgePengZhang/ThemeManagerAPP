@@ -2031,7 +2031,6 @@ public class LauncherModel extends BroadcastReceiver {
                                         provider.provider.getPackageName() == null)) {
                                     String log = "Deleting widget that isn't installed anymore: id="
                                         + id + " appWidgetId=" + appWidgetId;
-                                    Log.e(TAG, log);
                                     Launcher.addDumpLog(TAG, log, false);
                                     itemsToRemove.add(id);
                                 } else {
