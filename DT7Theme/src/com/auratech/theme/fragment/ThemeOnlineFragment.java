@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,7 @@ import com.auratech.theme.bean.ThemeInfoBean;
 import com.auratech.theme.utils.HttpConfig;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.HttpHandler;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
@@ -44,6 +46,7 @@ public class ThemeOnlineFragment extends Fragment {
 	private GridView mGridView;
 	private ThemeOnlineFragmentAdapter mAdapter;
 	private HttpUtils httpUtils;
+	private HttpHandler<String> httpHandler;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -84,6 +87,13 @@ public class ThemeOnlineFragment extends Fragment {
 		super.onResume();
 		obtainTheme() ;
 	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		httpHandler.cancel();
+	}
+	
 
 	/**
 	 * 
@@ -94,33 +104,39 @@ public class ThemeOnlineFragment extends Fragment {
 	 * @Copyright:
 	 */
 	private void obtainTheme() {
-		httpUtils.send(HttpMethod.POST, HttpConfig.URL_QUERY_THEMES, new RequestCallBack<String>() {
+		httpHandler = httpUtils.send(HttpMethod.POST, HttpConfig.URL_QUERY_THEMES, new RequestCallBack<String>() {
 
 			@Override
 			public void onFailure(HttpException error, String msg) {
-				Log.d("TAG", "onFailure:"+msg);
-				mContent.setVisibility(View.GONE);
-				mHint.setVisibility(View.VISIBLE);
-				mHint.setText(getResources().getString(R.string.theme_no));
+				FragmentActivity activity = getActivity();
+				Log.d("TAG", "onFailure:"+msg+",activity:"+activity);
+				if (activity != null) {
+					mContent.setVisibility(View.GONE);
+					mHint.setVisibility(View.VISIBLE);
+					String theme_no = activity.getResources().getString(R.string.theme_no);
+					mHint.setText(theme_no);
+				}
 			}
 
 			@Override
 			public void onSuccess(ResponseInfo<String> responseInfo) {
 //				Log.d("TAG", "onSuccess:"+responseInfo.result);
-				
-				ArrayList<ThemeInfoBean> list = parseThemeInfo(responseInfo.result);
-				if (list.size() > 0) { // 有数据 显示 view
-					listData.clear();
-					mHint.setVisibility(View.GONE);
-					mContent.setVisibility(View.VISIBLE);
-					listData.addAll(list);
-				} else { // 没有数据 隐藏 view
-					mContent.setVisibility(View.GONE);
-					mHint.setVisibility(View.VISIBLE);
-					mHint.setText(getString(R.string.theme_no));
-				}
+				FragmentActivity activity = getActivity();
+				if (activity != null) {
+					ArrayList<ThemeInfoBean> list = parseThemeInfo(responseInfo.result);
+					if (list.size() > 0) { // 有数据 显示 view
+						listData.clear();
+						mHint.setVisibility(View.GONE);
+						mContent.setVisibility(View.VISIBLE);
+						listData.addAll(list);
+					} else { // 没有数据 隐藏 view
+						mContent.setVisibility(View.GONE);
+						mHint.setVisibility(View.VISIBLE);
+						mHint.setText(getString(R.string.theme_no));
+					}
 
-				mAdapter.notifyDataSetChanged();
+					mAdapter.notifyDataSetChanged();
+				}
 			}
 		} );
 	}
