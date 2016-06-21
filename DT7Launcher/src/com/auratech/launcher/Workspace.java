@@ -71,7 +71,6 @@ import com.auratech.launcher.FolderIcon.FolderRingAnimator;
 import com.auratech.launcher.Launcher.CustomContentCallbacks;
 import com.auratech.launcher.LauncherSettings.Favorites;
 import com.auratech.launcher.pageanim.PageViewAnimation;
-import com.android.launcher3.WallpaperCropActivity;
 
 /**
  * The workspace is a wide area with a wallpaper and a finite number of pages.

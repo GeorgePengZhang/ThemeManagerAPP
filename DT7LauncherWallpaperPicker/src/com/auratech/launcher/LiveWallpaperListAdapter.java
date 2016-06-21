@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.launcher3;
+package com.auratech.launcher;
 
 import java.io.IOException;
 import java.text.Collator;
@@ -44,7 +44,7 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-import com.pachong.launcher3.R;
+import com.auratech.launcher.R;
 
 public class LiveWallpaperListAdapter extends BaseAdapter implements ListAdapter {
     private static final String LOG_TAG = "LiveWallpaperListAdapter";

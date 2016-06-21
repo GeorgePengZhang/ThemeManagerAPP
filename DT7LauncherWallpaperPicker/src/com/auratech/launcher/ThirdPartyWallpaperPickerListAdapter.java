@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.launcher3;
+package com.auratech.launcher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ import android.widget.FrameLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-import com.pachong.launcher3.R;
+import com.auratech.launcher.R;
 
 public class ThirdPartyWallpaperPickerListAdapter extends BaseAdapter implements ListAdapter {
     private static final String LOG_TAG = "LiveWallpaperListAdapter";

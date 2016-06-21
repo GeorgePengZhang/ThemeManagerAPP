@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.launcher3;
+package com.auratech.launcher;
 
 import android.content.Context;
 import android.graphics.Matrix;

@@ -18,7 +18,6 @@ package com.auratech.launcher;
 
 import android.content.Intent;
 
-import com.android.launcher3.WallpaperPickerActivity;
 
 public class LauncherWallpaperPickerActivity extends WallpaperPickerActivity {
     @Override

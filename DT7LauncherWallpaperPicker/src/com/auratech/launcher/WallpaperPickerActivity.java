@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.launcher3;
+package com.auratech.launcher;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -76,7 +76,7 @@ import android.widget.Toast;
 
 import com.android.photos.BitmapRegionTileSource;
 import com.android.photos.BitmapRegionTileSource.BitmapSource;
-import com.pachong.launcher3.R;
+import com.auratech.launcher.R;
 
 public class WallpaperPickerActivity extends WallpaperCropActivity {
     static final String TAG = "Launcher.WallpaperPickerActivity";
