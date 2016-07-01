@@ -108,8 +108,6 @@ public class ThemeLocalFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		
-		mFirstLoaded = true;
 		mTask = new LoadedDescription(mList, mAdapter);
 		mTask.execute();
 	}
@@ -123,7 +121,7 @@ public class ThemeLocalFragment extends Fragment {
 		}
 	}
 	
-	public static class LoadedDescription extends AsyncTask<Void, Void, Void> {
+	public class LoadedDescription extends AsyncTask<Void, Void, Void> {
 
 		private ArrayList<DescriptionBean> list = new ArrayList<DescriptionBean>();
 		private ArrayList<DescriptionBean> mMainList;
@@ -160,6 +158,7 @@ public class ThemeLocalFragment extends Fragment {
 			super.onPostExecute(result);
 			mMainList.clear();
 			mMainList.addAll(list);
+			mFirstLoaded = true;
 			mMainAdapter.notifyDataSetChanged();
 		}
 	};

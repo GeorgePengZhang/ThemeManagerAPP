@@ -80,10 +80,7 @@ public class ThemeOnlineFragmentAdapter extends BaseAdapter {
 		mBitmapUtils.display(ih.imageView, urlStr);
 		
 		String themeFileName = ThemeResouceManager.getInstance().getThemeFileName(bean.getThemefile());
-		String themeKey = mPreferencesManager.getThemeKey();
-
-		Log.d("TAG", "getView:"+themeFileName+",themeKey:"+themeKey);
-		
+		String themeKey = mPreferencesManager.getThemeKey();		
 		
 		if (themeKey.equals(ThemeResouceManager.THEME_PATH+themeFileName)) {
 			ih.imageSelected.setImageResource(R.drawable.theme_using_flag);
