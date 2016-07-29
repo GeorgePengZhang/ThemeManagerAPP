@@ -16,9 +16,11 @@ public class PreferencesManager {
 	
 	private static PreferencesManager mPreferencesManager;
 	
+	private static final String PREFERENCE_PACKAGE_NAME = "com.auratech.system";
+	
 	private PreferencesManager(Context context) {
 		try {
-			mThemeContext = context.createPackageContext("com.auratech.theme", Context.CONTEXT_IGNORE_SECURITY);
+			mThemeContext = context.createPackageContext(PREFERENCE_PACKAGE_NAME, Context.CONTEXT_IGNORE_SECURITY);
 		} catch (NameNotFoundException e) {
 			e.printStackTrace();
 		} 

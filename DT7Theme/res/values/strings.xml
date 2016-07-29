@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">DT7_ThemeAPP</string>
+    <string name="app_name">DT7Theme</string>
     <string name="themes">"Themes"</string>
     <string name="pageanim_normal">"Classic"</string>
     <string name="pageanim_turntable">"Windmill"</string>
@@ -34,4 +34,8 @@
     <string name="theme_YES">Yes</string>
     <string name="theme_NO">No</string>
 	<string name="theme_delete_hint">Delete these resources?</string>
+	
+	<string name="update_cancel">Cancel</string>
+	<string name="update_update">Update</string>
+	<string name="update_info">An updated version is available. Update it now?</string>
 </resources>

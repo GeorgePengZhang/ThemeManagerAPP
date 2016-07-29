@@ -19,6 +19,8 @@
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    
+    <string name="app_name">DT7Theme</string>
     <string name="themes">"主题"</string>
     <string name="pageanim_normal">"经典"</string>
     <string name="pageanim_turntable">"转盘"</string>
@@ -51,5 +53,9 @@
     <string name="theme_YES">是</string>
     <string name="theme_NO">否</string>
     <string name="theme_delete_hint">确认要删除该资源吗？</string>
+    
+    <string name="update_cancel">取消</string>
+	<string name="update_update">更新</string>
+	<string name="update_info">有版本更新，是否更新?</string>
 	
 </resources>

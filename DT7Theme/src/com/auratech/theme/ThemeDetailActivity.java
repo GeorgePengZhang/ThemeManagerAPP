@@ -5,16 +5,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.WallpaperManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.PowerManager;
+import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -33,10 +33,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.auratech.system.aidl.IAIDLUpdateTheme;
 import com.auratech.theme.bean.DescriptionBean;
 import com.auratech.theme.utils.CircleImageView;
 import com.auratech.theme.utils.FileCopyManager;
-import com.auratech.theme.utils.PreferencesManager;
 import com.auratech.theme.utils.ThemeImageLoader;
 import com.auratech.theme.utils.ThemeImageLoader.ThemeImageOptions;
 import com.auratech.theme.utils.ThemeResouceManager;
@@ -88,6 +88,9 @@ public class ThemeDetailActivity extends Activity {
 		initViews();
 		initDialog();
 		
+		Intent i = new Intent("com.auratech.system.UpdateThemeService.start");
+		i.setPackage("com.auratech.system");
+		bindService(i, mServiceConnection, Context.BIND_AUTO_CREATE);
 	}
 	
 	@Override
@@ -95,7 +98,27 @@ public class ThemeDetailActivity extends Activity {
 		super.onDestroy();
 
 		ThemeImageLoader.getInstance().cancel();
+		
+		if (mIAIaidlUpdateTheme != null) {
+			unbindService(mServiceConnection);
+		}
 	}
+	
+	private IAIDLUpdateTheme mIAIaidlUpdateTheme;
+	
+	private ServiceConnection mServiceConnection = new ServiceConnection() {
+		
+		@Override
+		public void onServiceDisconnected(ComponentName name) {
+			mIAIaidlUpdateTheme = null;
+		}
+		
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			mIAIaidlUpdateTheme = IAIDLUpdateTheme.Stub.asInterface(service);
+		}
+	};
+	
 
 	private void initViews() {
 		mApply = (TextView) findViewById(R.id.id_apply);
@@ -240,8 +263,6 @@ public class ThemeDetailActivity extends Activity {
 					startActivity(intent); 
 					
 					finish();
-					//结束自己的进程
-//					android.os.Process.killProcess(android.os.Process.myPid());
 				}
 			});
 			yes.setOnClickListener(new OnClickListener() {
@@ -249,8 +270,11 @@ public class ThemeDetailActivity extends Activity {
 				@Override
 				public void onClick(View v) {
 					//重启
-					PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
-					powerManager.reboot("");
+					try {
+						mIAIaidlUpdateTheme.reboot();
+					} catch (RemoteException e) {
+						e.printStackTrace();
+					}
 				}
 			});
 			
@@ -286,7 +310,6 @@ public class ThemeDetailActivity extends Activity {
 		File sourceFile = new File(themePath);
 		
 		if (!sourceFile.exists()) {
-//			Toast.makeText(getApplicationContext(), "本主题不存在，请检查sdcard", Toast.LENGTH_SHORT).show();
 			return ;
 		}
 		mProgressBar.setProgress(10);
@@ -322,15 +345,19 @@ public class ThemeDetailActivity extends Activity {
 		//设置声音特效，铃声，通知声，来电声
 		ThemeResouceManager.getInstance().setDefalutSound(getApplicationContext());
 		
-		PreferencesManager.getInstance(getApplicationContext()).setThemeKey(mBean.getPath()+mTheme);
+		try {
+			mIAIaidlUpdateTheme.setThemeKey(mBean.getPath()+mTheme);
+		} catch (RemoteException e1) {
+			e1.printStackTrace();
+		}
+		
 		//设置墙纸
 		WallpaperManager wallpaperManager = WallpaperManager.getInstance(getApplicationContext());
 		
 		Log.d("TAG", "isLiveWallpaper:"+mBean.isLiveWallpaper());
 		if (mBean.isLiveWallpaper()) {
 			try {
-				ComponentName name = new ComponentName("com.auratech.wallpaper", "com.auratech.wallpaper.AuraWallpaper");
-				wallpaperManager.getIWallpaperManager().setWallpaperComponent(name);
+				mIAIaidlUpdateTheme.setLiveWallpaper("com.auratech.wallpaper", "com.auratech.wallpaper.AuraWallpaper");
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
@@ -347,10 +374,11 @@ public class ThemeDetailActivity extends Activity {
 		
 		mProgressBar.setProgress(80);
 		
-		//结束launcher进程
-		ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-//		activityManager.killBackgroundProcesses("com.auratech.launcher");
-		activityManager.forceStopPackage("com.auratech.launcher");
+		try {
+			mIAIaidlUpdateTheme.killLauncher("com.auratech.launcher");
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
 		
 		mProgressBar.setProgress(100);
 		
@@ -380,11 +408,8 @@ public class ThemeDetailActivity extends Activity {
 			intent.addCategory(Intent.CATEGORY_HOME);  
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);  
 			startActivity(intent); 
-			//重启
-//			PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
-//			powerManager.reboot("");
-			//结束自己的进程
-//			android.os.Process.killProcess(android.os.Process.myPid());
+			
+			finish();
 		}
 	}
 

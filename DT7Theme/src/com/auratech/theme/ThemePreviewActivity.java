@@ -3,6 +3,8 @@ package com.auratech.theme;
 import java.util.ArrayList;
 
 import android.R.color;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -35,6 +37,8 @@ public class ThemePreviewActivity extends FragmentActivity {
 
 //		initTabline();
 		initViews();
+		
+		checkUpdateApp();
 	}
 
 	@Override
@@ -146,4 +150,19 @@ public class ThemePreviewActivity extends FragmentActivity {
 		mTVLocal.setBackgroundColor(color.transparent);
 		mTVOnline.setBackgroundColor(color.transparent);
 	}
+	
+	
+	private void checkUpdateApp() {
+        try {
+            String packageName = getPackageName();
+            //因为这个是google的网址，所以请求的时候需要翻墙在能正常请求到数据(注：这个请求要保证本app已经上传到google play)
+            String url = "https://play.google.com/store/apps/details?id="+packageName;
+
+            PackageInfo info = getPackageManager().getPackageInfo(packageName, 0);
+
+            new CheckVersionAsyncTask(ThemePreviewActivity.this, info.versionName).executeOnExecutor(CheckVersionAsyncTask.THREAD_POOL_EXECUTOR, url);
+        } catch (NameNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 }

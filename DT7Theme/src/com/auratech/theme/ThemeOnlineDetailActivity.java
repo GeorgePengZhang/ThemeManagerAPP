@@ -5,16 +5,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.WallpaperManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.PowerManager;
+import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -23,27 +23,27 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.auratech.system.aidl.IAIDLUpdateTheme;
 import com.auratech.theme.bean.DescriptionBean;
 import com.auratech.theme.bean.ThemeInfoBean;
 import com.auratech.theme.utils.BitmapHelp;
 import com.auratech.theme.utils.CircleImageView;
 import com.auratech.theme.utils.FileCopyManager;
 import com.auratech.theme.utils.HttpConfig;
-import com.auratech.theme.utils.PreferencesManager;
+import com.auratech.theme.utils.ThemeImageLoader.ThemeImageOptions;
 import com.auratech.theme.utils.ThemeResouceManager;
 import com.auratech.theme.utils.ThemeUtils;
-import com.auratech.theme.utils.ThemeImageLoader.ThemeImageOptions;
 import com.auratech.theme.utils.view.NumberProgressBar;
 import com.auratech.theme.utils.view.OnProgressBarListener;
 import com.lidroid.xutils.BitmapUtils;
@@ -55,8 +55,7 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 /**
  * 在線主題詳情界面
  * 
- * @Description TODO
- * @author Robin
+ * @author steven
  * @date
  * @Copyright:
  */
@@ -117,6 +116,10 @@ public class ThemeOnlineDetailActivity extends Activity implements
 		initIndicator();
 		initViews();
 		initDialog();
+		
+		Intent i = new Intent("com.auratech.system.UpdateThemeService.start");
+		i.setPackage("com.auratech.system");
+		bindService(i, mServiceConnection, Context.BIND_AUTO_CREATE);
 	}
 
 	private ArrayList<String> getListData(ThemeInfoBean themBean) {
@@ -134,7 +137,26 @@ public class ThemeOnlineDetailActivity extends Activity implements
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		
+		if (mIAIaidlUpdateTheme != null) {
+			unbindService(mServiceConnection);
+		}
 	}
+	
+	private IAIDLUpdateTheme mIAIaidlUpdateTheme;
+	
+	private ServiceConnection mServiceConnection = new ServiceConnection() {
+		
+		@Override
+		public void onServiceDisconnected(ComponentName name) {
+			mIAIaidlUpdateTheme = null;
+		}
+		
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder service) {
+			mIAIaidlUpdateTheme = IAIDLUpdateTheme.Stub.asInterface(service);
+		}
+	};
 
 	// 创建文件夹及文件
 	public String createDir(String filePath) {
@@ -391,8 +413,11 @@ public class ThemeOnlineDetailActivity extends Activity implements
 				@Override
 				public void onClick(View v) {
 					//重启
-					PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
-					powerManager.reboot("");
+					try {
+						mIAIaidlUpdateTheme.reboot();
+					} catch (RemoteException e) {
+						e.printStackTrace();
+					}
 				}
 			});
 			
@@ -463,7 +488,11 @@ public class ThemeOnlineDetailActivity extends Activity implements
 		//设置声音特效，铃声，通知声，来电声
 		ThemeResouceManager.getInstance().setDefalutSound(getApplicationContext());
 		
-		PreferencesManager.getInstance(getApplicationContext()).setThemeKey(mThemeDownloadPath);
+		try {
+			mIAIaidlUpdateTheme.setThemeKey(mThemeDownloadPath);
+		} catch (RemoteException e1) {
+			e1.printStackTrace();
+		}
 		
 		DescriptionBean bean = ThemeResouceManager.getInstance().getThemeDescriptionBean(mThemeDownloadPath);
 		//设置墙纸
@@ -471,8 +500,7 @@ public class ThemeOnlineDetailActivity extends Activity implements
 		
 		if (bean.isLiveWallpaper()) {
 			try {
-				ComponentName name = new ComponentName("com.auratech.wallpaper", "com.auratech.wallpaper.AuraWallpaper");
-				wallpaperManager.getIWallpaperManager().setWallpaperComponent(name);
+				mIAIaidlUpdateTheme.setLiveWallpaper("com.auratech.wallpaper", "com.auratech.wallpaper.AuraWallpaper");
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
@@ -492,9 +520,11 @@ public class ThemeOnlineDetailActivity extends Activity implements
 		mProgressBar.setProgress(80);
 		
 		//结束launcher进程
-		ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-//		activityManager.killBackgroundProcesses("com.auratech.launcher");
-		activityManager.forceStopPackage("com.auratech.launcher");
+		try {
+			mIAIaidlUpdateTheme.killLauncher("com.auratech.launcher");
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
 		
 		
 		mProgressBar.setProgress(100);
