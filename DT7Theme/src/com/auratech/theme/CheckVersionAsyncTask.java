@@ -39,8 +39,6 @@ public class CheckVersionAsyncTask extends AsyncTask<String, Void, Boolean> {
         boolean result = false;
         String url = params[0];   //請在 excecute 時傳入你 google play 的 url 位置，不是 market 喔，要 http
 
-        Log.d("TAG", "doInBackground:"+Thread.currentThread().getName());
-        
         HttpPost post = new HttpPost(url);
 
         AndroidHttpClient client = AndroidHttpClient.newInstance("android");
@@ -70,7 +68,7 @@ public class CheckVersionAsyncTask extends AsyncTask<String, Void, Boolean> {
             * 請特別注意這一點
             */
 
-            if (currentVersion.compareTo(oldVersion) > 0)
+            if (currentVersion != null && currentVersion.compareTo(oldVersion) > 0)
                 result = true;
             Log.v("ids", content+",thread:"+Thread.currentThread().getName());
 

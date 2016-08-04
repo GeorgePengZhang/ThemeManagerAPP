@@ -1,0 +1,1 @@
+签名文件的路径:/device/rockchip/rksdk/aura/aura-dt7-app/apk/签名资料

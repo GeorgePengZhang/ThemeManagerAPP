@@ -3,8 +3,12 @@ package com.auratech.theme;
 import java.util.ArrayList;
 
 import android.R.color;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -22,6 +26,8 @@ import com.auratech.theme.utils.ThemeImageLoader;
 
 public class ThemePreviewActivity extends FragmentActivity {
 	
+	private static final String AURA_TELPAD_DT7_TABLET = "Aura_TELPAD_DT7_tablet";
+	
 	private ViewPager mViewPager;
 	private FragmentPagerAdapter mPagerAdapter;
 	private ArrayList<Fragment> mFragmentList;
@@ -36,9 +42,25 @@ public class ThemePreviewActivity extends FragmentActivity {
 		setContentView(R.layout.theme_preview_layout);
 
 //		initTabline();
-		initViews();
-		
-		checkUpdateApp();
+		if (AURA_TELPAD_DT7_TABLET.equals(Build.MODEL)) {
+			initViews();
+			
+			checkUpdateApp();
+		} else {
+			new AlertDialog.Builder(ThemePreviewActivity.this, R.style.MyDialog).setTitle("Hint").setMessage("This app don't used this tablet!").setOnCancelListener(new OnCancelListener() {
+				
+				@Override
+				public void onCancel(DialogInterface dialog) {
+					finish();
+				}
+			}).setNegativeButton(R.string.update_cancel, new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					finish();
+				}
+			}).create().show();
+		}
 	}
 
 	@Override
