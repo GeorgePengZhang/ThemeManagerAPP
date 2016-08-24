@@ -15,7 +15,7 @@ import org.apache.tools.zip.ZipOutputStream;
 
 public class ZipUtil {
 
-	private static final String TAG = "ZipUtil";
+//	private static final String TAG = "ZipUtil";
 
 	private ZipFile zipFile;
 	private ZipOutputStream zipOut; // Ñ¹ËõZip
@@ -128,6 +128,7 @@ public class ZipUtil {
 						parent.mkdirs();
 					}
 					parent.setReadable(true, false);
+					parent.setWritable(true, false);
 					parent.setExecutable(true, false);
 
 					inputStream = zipFile.getInputStream(entry);
@@ -137,10 +138,10 @@ public class ZipUtil {
 						fileOut.write(this.buf, 0, this.readedBytes);
 					}
 					fileOut.close();
-
 					inputStream.close();
 				}
 				file.setReadable(true, false);
+				file.setWritable(true, false);
 				file.setExecutable(true, false);
 			}
 			this.zipFile.close();

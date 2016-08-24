@@ -63,7 +63,7 @@ public class ThemeDetailActivity extends Activity {
 	private String mTheme;
 	
 	private AlertDialog mDialog;
-	private TextView mContent;
+//	private TextView mContent;
 	private View mApplyingLayout;
 	private NumberProgressBar mProgressBar;
 	private View mRebootLayout;
@@ -81,7 +81,6 @@ public class ThemeDetailActivity extends Activity {
 		mBean = intent.getParcelableExtra(THEME_DETAIL);
 		previewsList = mBean.getPreviews();
 		mTheme = mBean.getTheme();
-		
 		
 		initTab();
 		initIndicator();
@@ -243,7 +242,7 @@ public class ThemeDetailActivity extends Activity {
 			
 			//正在配置主题包的dialog view
 			mApplyingLayout = View.inflate(getApplicationContext(), R.layout.theme_dialog_layout, null);
-			mContent = (TextView) mApplyingLayout.findViewById(R.id.id_textView);
+//			mContent = (TextView) mApplyingLayout.findViewById(R.id.id_textView);
 			mProgressBar = (NumberProgressBar) mApplyingLayout.findViewById(R.id.id_progressBar);
 			
 			//是否要重启系统的dialog view
@@ -319,6 +318,7 @@ public class ThemeDetailActivity extends Activity {
 			dirFile.mkdirs();
 		}
 		dirFile.setReadable(true, false);
+		dirFile.setWritable(true, false);
 		dirFile.setExecutable(true, false);
 		//将/data/system/theme目录下的文件删除
 		ThemeResouceManager.getInstance().deleteDirFile(dirFile);
@@ -334,6 +334,7 @@ public class ThemeDetailActivity extends Activity {
 			e.printStackTrace();
 		}
 		destFile.setReadable(true, false);
+		destFile.setWritable(true, false);
 		destFile.setExecutable(true, false);
 		
 		mProgressBar.setProgress(40);

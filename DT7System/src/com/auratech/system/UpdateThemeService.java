@@ -1,5 +1,7 @@
 package com.auratech.system;
 
+import java.io.File;
+
 import android.app.ActivityManager;
 import android.app.Service;
 import android.app.WallpaperManager;
@@ -16,6 +18,19 @@ import com.auratech.theme.utils.PreferencesManager;
 public class UpdateThemeService extends Service {
 	
 	public static final String START_SERVICE = "com.auratech.system.UpdateThemeService.start";
+	
+	
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		File file = new File("/data/system/theme");
+        if (!file.exists()) {
+        	file.mkdirs();
+        }
+        file.setWritable(true, false);
+        file.setReadable(true, false);
+        file.setExecutable(true, false);
+	}
 
 	@Override
 	public IBinder onBind(Intent intent) {

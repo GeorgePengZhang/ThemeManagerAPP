@@ -29,7 +29,7 @@ import com.auratech.theme.utils.ThemeResouceManager;
 
 public class ThemeLocalFragment extends Fragment {
 
-	private static final String TAG = "ThemeLocalFragment";
+//	private static final String TAG = "ThemeLocalFragment";
 	
 	
 	private GridView mGridView;

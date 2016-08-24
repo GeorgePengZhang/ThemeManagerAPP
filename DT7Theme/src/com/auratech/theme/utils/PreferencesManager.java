@@ -9,7 +9,7 @@ public class PreferencesManager {
 	
 	private static final String THEMES = "themes";
 	private static final String THEME_KEY = "theme_key";
-	private static final String TAG = "PreferencesManager";
+//	private static final String TAG = "PreferencesManager";
 	
 	private SharedPreferences mSharedPreferences;
 	private Context mThemeContext;

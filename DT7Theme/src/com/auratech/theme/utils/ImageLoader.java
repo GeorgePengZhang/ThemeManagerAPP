@@ -32,7 +32,7 @@ import android.widget.ImageView;
 public class ImageLoader {
 
 	// 首先从网络获取，并保存到本地，在从本地读取并压缩图片，保存到内存缓存中
-	private static final String TAG = "ImageLoader";
+//	private static final String TAG = "ImageLoader";
 
 	protected static final int IMAGELOADER_SUCCESS = 1;
 	protected static final int IMAGELOADER_FAILED = 2;
@@ -442,7 +442,7 @@ public class ImageLoader {
 			connection.setReadTimeout(5 * 1000);
 			inputStream = connection.getInputStream();
 
-			int code = connection.getResponseCode();
+//			int code = connection.getResponseCode();
 			String extension = getURLExtension(urlString);
 			if (!TextUtils.isEmpty(extension)) {
 				Bitmap bitmap = BitmapFactory.decodeStream(inputStream);

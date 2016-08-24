@@ -13,7 +13,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.auratech.theme.R;
@@ -44,7 +43,7 @@ public class CircleImageView extends ImageView {
     private int mBitmapWidth;
     private int mBitmapHeight;
 
-    private float mDrawableRadius;
+//    private float mDrawableRadius;
 
     private boolean mReady;
     private boolean mSetupPending;
@@ -233,7 +232,7 @@ public class CircleImageView extends ImageView {
 //        mBorderRadius = (int) Math.min((mBorderRect.height() - mBorderWidth) / 2, (mBorderRect.width() - mBorderWidth) / 2);
 
         mDrawableRect.set(mBorderWidth/2, mBorderWidth/2, mBorderRect.width() - mBorderWidth/2, mBorderRect.height() - mBorderWidth/2);
-        mDrawableRadius = Math.min(mDrawableRect.height() / 2, mDrawableRect.width() / 2);
+//        mDrawableRadius = Math.min(mDrawableRect.height() / 2, mDrawableRect.width() / 2);
 
         updateShaderMatrix();
         invalidate();

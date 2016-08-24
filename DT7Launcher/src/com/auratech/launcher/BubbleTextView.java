@@ -16,6 +16,8 @@
 
 package com.auratech.launcher;
 
+import com.auratech.theme.utils.DescriptionBean;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -97,7 +99,14 @@ public class BubbleTextView extends TextView {
         LauncherAppState app = LauncherAppState.getInstance();
         DeviceProfile grid = app.getDynamicGrid().getDeviceProfile();
         
-        int fontSize = app.getDescriptionBean().getFontSize();
+        DescriptionBean bean = app.getDescriptionBean();
+        
+        int fontSize = -1;
+        
+        if (bean != null) {
+        	fontSize = bean.getFontSize();
+        }
+        
         int iconTextSize = 0;
         if (fontSize != -1) {
         	iconTextSize = DynamicGrid.pxFromDp(fontSize, getResources().getDisplayMetrics());
@@ -114,11 +123,20 @@ public class BubbleTextView extends TextView {
     public int getTextColorFromConfig(int defaultColor) {
     	LauncherAppState app = LauncherAppState.getInstance();
     	
-    	int alpha = app.getDescriptionBean().getFontColorAlpha();
-    	int red = app.getDescriptionBean().getFontColorRed();
-    	int green = app.getDescriptionBean().getFontColorGreen();
-    	int blue = app.getDescriptionBean().getFontColorBlue();
-		 
+    	DescriptionBean bean = app.getDescriptionBean();
+    	
+    	int alpha = -1;
+    	int red = -1;
+    	int green = -1;
+    	int blue = -1;
+    	
+    	if (bean != null) {
+    		alpha = bean.getFontColorAlpha();
+        	red = bean.getFontColorRed();
+        	green = bean.getFontColorGreen();
+        	blue = bean.getFontColorBlue();
+    	}
+    	
     	int color;
     	if (alpha == -1 && red == -1 && green == -1 && blue == -1) {
     		color = defaultColor;

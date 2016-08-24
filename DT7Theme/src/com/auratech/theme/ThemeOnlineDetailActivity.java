@@ -85,7 +85,7 @@ public class ThemeOnlineDetailActivity extends Activity implements
 	private String mThemeDownloadPath = null;
 	
 	private AlertDialog mDialog;
-	private TextView mContent;
+//	private TextView mContent;
 	private View mApplyingLayout;
 	private NumberProgressBar mProgressBar;
 	private View mRebootLayout;
@@ -199,7 +199,7 @@ public class ThemeOnlineDetailActivity extends Activity implements
 						bnp.setProgress(0);
 						mDownload.setEnabled(true);
 						mDownload.setText(getString(R.string.theme_download));
-						Toast.makeText(ThemeOnlineDetailActivity.this, "Download Failed", 500).show();
+						Toast.makeText(ThemeOnlineDetailActivity.this, "Download Failed", Toast.LENGTH_SHORT).show();
 					}
 
 					@Override
@@ -386,7 +386,7 @@ public class ThemeOnlineDetailActivity extends Activity implements
 			
 			//正在配置主题包的dialog view
 			mApplyingLayout = View.inflate(getApplicationContext(), R.layout.theme_dialog_layout, null);
-			mContent = (TextView) mApplyingLayout.findViewById(R.id.id_textView);
+//			mContent = (TextView) mApplyingLayout.findViewById(R.id.id_textView);
 			mProgressBar = (NumberProgressBar) mApplyingLayout.findViewById(R.id.id_progressBar);
 			
 			//是否要重启系统的dialog view
@@ -462,6 +462,7 @@ public class ThemeOnlineDetailActivity extends Activity implements
 			dirFile.mkdirs();
 		}
 		dirFile.setReadable(true, false);
+		dirFile.setWritable(true, false);
 		dirFile.setExecutable(true, false);
 		//将/data/system/theme目录下的文件删除
 		ThemeResouceManager.getInstance().deleteDirFile(dirFile);
@@ -477,6 +478,7 @@ public class ThemeOnlineDetailActivity extends Activity implements
 			e.printStackTrace();
 		}
 		destFile.setReadable(true, false);
+		destFile.setWritable(true, false);
 		destFile.setExecutable(true, false);
 		
 		mProgressBar.setProgress(40);
